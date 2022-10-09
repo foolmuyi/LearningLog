@@ -139,6 +139,113 @@ $F$值越小，光圈越大  \\
 
 \section{边缘检测}
 
+\subsection{边缘}
+一阶导数可以用于检测图像中的一个点是否是边缘的点（灰度不变时一阶导数为零）
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.1]{imgs/edge_1.png}
+\end{figure}
+\\
+二阶导数的符号可以用于判断一个边缘像素在边缘亮的一边还是暗的一边（正$\to$亮，负$\to$暗）
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.1]{imgs/edge_2.png}
+\end{figure}
+
+\subsection{边缘检测算子}
+
+\subsubsection{梯度算子}
+Roberts算子（2$\times$2模板）、Prewitt算子（3$\times$3模板）、Sobel算子（3$\times$3模板，增大中心点的权重）
+
+\subsubsection{拉普拉斯算子}
+对噪声敏感，容易产生双像素边缘
+
+\subsubsection{Canny算子}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.1]{imgs/canny.png}
+\end{figure}
+
+
+\section{图像分割}
+
+\subsection{直方图}
+图像中不同灰度值的像素所占的比例。  \\
+若直方图呈现双峰分布，可取一个介于两峰之间的阈值分离前景和背景。
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.1]{imgs/bimodal.png}
+\end{figure}
+
+\subsection{多阈值分割}
+
+\subsection{灰度均衡}
+将原图的灰度范围映射到新的范围，增大对比度。具体方法包括线性均衡、对数均衡、指数均衡等
+
+\subsection{局部阈值}
+先进行单阈值分割，然后将分割后的结果作为种子，在原图中生长（灰度相近的视为同一物体）
+
+
+\section{尺寸测量}
+
+\subsection{点检测}
+用空域的高通滤波来检测孤立点。
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.1]{imgs/dot_det.png}
+\end{figure}
+
+\subsection{线检测}
+Hough变换
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.1]{imgs/hough.png}
+\end{figure}
+\\
+由于垂直直线的斜率$a$无穷大，一般用极坐标形式 $\rho = xcos\theta + ysin\theta$  \\
+除了检测直线外，Hough变换也可用于检测曲线，如圆、椭圆等。
+
+\subsection{间距测量}
+关键是检测到准确的边缘。
+
+\subsection{角度检测}
+
+
+\section{图像变换}
+
+\subsection{反转变换}
+$s=L-1-r$ \qquad 适用于增强嵌入于暗区域中的白色或灰色细节
+
+\subsection{对数变换}
+$s=clog(1+r)$  \qquad  适用于增强图像中低灰度的部分
+
+\subsection{幂律（伽马）变换}
+$s=cr^\gamma$  \qquad  当$\gamma < 1$时增强低灰度部分，当$\gamma > 1$时增强高灰度部分
+
+\subsection{分段线性变换}
+对于不同的灰度范围采用不同的线性变换，从而增强特定的灰度范围，增大对比度
+
+\subsection{直方图均衡化}
+增大对比度
+
+\subsection{仿射变换}
+用一个矩阵对原图像进行平移、旋转、放缩。
+\begin{figure*}[htb]
+    \includegraphics[scale=0.1]{imgs/affine.png}
+    \includegraphics[scale=0.1]{imgs/affine_1.png}
+    \includegraphics[scale=0.1]{imgs/affine_2.png}
+\end{figure*}
+
+
+\section{3D视觉}
+
+
+
+
+
+
+
+
 
 
 
