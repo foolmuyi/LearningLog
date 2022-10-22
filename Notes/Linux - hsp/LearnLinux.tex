@@ -161,6 +161,42 @@ gzip/gunzip：gzip filename压缩文件（只能压缩为.gz），gunzip filenam
 zip/unzip：zip常用选项-r递归压缩，unzip常用选项-d指定解压文件存放目录  \\
 tar：压缩用tar -zcvf filename.tar.gz files2zip，解压用tar -zxvf filename.tar.gz
 
+\section{组管理和权限管理}
+
+\subsection{组管理}
+$\bullet$ 在Linux中每个用户必须属于一个组，不能独立存在。对于Linux中的文件有所有者、所在组、其他组三个概念。  \\
+$\bullet$ 通过chown username filename可以修改文件的所有者；通过chgrp groupname filename
+可以修改文件所在组；通过usermod -g groupname username可以修改用户所属的组。
+
+\subsection{rwx权限}
+\ding{172} 当我们在某个路径下执行ls -l命令时，对于每个文件/目录，我们会得到类似下图所示的信息：
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.4]{imgs/rwx_info.png}
+\end{figure}
+\\
+其中前10位（-rwxrw-r--）代表了该文件/目录的权限信息，具体含义如下：  \\
+第1位（-、d、l、c、b）表示文件类型：-代表普通文件，d表示目录，l表示链接，c表示字符设备文件（键盘、
+鼠标等），b表示块文件（硬盘等）。  \\
+第2$\sim$4位表示该文件/目录所有者的权限。  \\
+第5$\sim$7位表示该文件/目录所在组的权限。  \\
+第8$\sim$10位表示该文件/目录其他组的权限。  \\
+权限信息后的数字表示此目录下的子目录的个数（只算目录不算文件），如果是文件而非目录，则该数字为1。
+对于目录还需要注意，因为任何一个目录默认包含./和../两个子目录，因此对一个空文件夹，该数字为2。\\\\
+\ding{173} 文件的rwx权限：  \\
+r：可以读取，查看；  \\
+w：可以修改，但是不代表可以删除该文件，删除一个文件需要对该文件所在的目录拥有w权限；  \\
+x：可以被执行。  \\\\
+\ding{174} 目录的rwx权限：  \\
+r：可以读取，即可以用ls查看内容；  \\
+w：可以修改，即可以在目录内创建、删除文件或者重命名目录；  \\
+x：可执行，即可以cd进入该目录。 \\\\
+\ding{175} rwx也可以用数字来表示（r=4, w=2, x=1），因此rwx=4+2+1=7。
+
+\subsection{修改rwx权限}
+
+
+
 
 
 
