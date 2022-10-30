@@ -194,7 +194,19 @@ x：可执行，即可以cd进入该目录。 \\\\
 \ding{175} rwx也可以用数字来表示（r=4, w=2, x=1），因此rwx=4+2+1=7。
 
 \subsection{修改rwx权限}
+chmod：修改文件或目录的权限，具体使用方法如下。  \\
+\ding{172} 通过u(所有者)、g(所在组)、o(其他用户)、a(所有用户)和+、-、=组合的方式修改权限。例如：
+chmod u=rwx,g=rx,o=r filename/dirname, \quad chmod u+x filename/dirname等。\\
+\ding{173} 通过数字修改权限。前文已经提到过，rwx也可以用数字来表示（r=4, w=2, x=1）。因此，
+chmod u=rwx,g=rx,o=r filename/dirname也可以写成 chmod 754 filename/dirname。
 
+\subsection{修改所有者和所在组}
+修改所有者：chown newowner filename/dirname \\
+修改所有者和所在组：chown newowner:newgroup filename/dirname  \\
+修改所在组：chgrp newgroup filename/dirname
+
+
+\section{定时任务调度}
 
 
 
