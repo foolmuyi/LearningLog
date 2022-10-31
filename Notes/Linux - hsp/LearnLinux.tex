@@ -208,6 +208,35 @@ chmod u=rwx,g=rx,o=r filename/dirname也可以写成 chmod 754 filename/dirname�
 
 \section{定时任务调度}
 
+\subsection{crond任务调度}
+基本语法：crontab [option]  \\
+e：编辑crontab定时任务 \qquad l：列出crontab任务 \qquad r：删除当前用户的所有crontab任务 \\
+时间格式：m(minute) h(hour) dom(dayOfMonth) mon(month) dow(dayOfWeek)  \\
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.3]{imgs/crontab.png}
+\end{figure}
+\\
+使用crond定时执行脚本时，要确认对该脚本有执行权限。  \\
+重启crond服务：service crond restart
+
+\subsection{at定时任务}
+at指令是一次性定时任务，执行完一次后便不再执行。at的守护进程atd会以后台模式运行，默认情况下atd守护
+进程每60s检查一次作业队列。在使用at指令时，一定要保证atd进程已启动。  \\
+at命令格式：at [option] [time]  \\
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.27]{imgs/at_time.png}
+\end{figure}
+\\
+用atq命令可以查看还未执行的任务，用atrm+任务编号可以删除任务。
+
+
+
+
+
+
+
 
 
 
