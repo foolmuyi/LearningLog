@@ -173,8 +173,7 @@ $\bullet$ 通过chown username filename可以修改文件的所有者；通过ch
 \begin{figure}[htb]
     \centering
     \includegraphics[scale=0.4]{imgs/rwx_info.png}
-\end{figure}
-\\
+\end{figure}  \\
 其中前10位（-rwxrw-r--）代表了该文件/目录的权限信息，具体含义如下：  \\
 第1位（-、d、l、c、b）表示文件类型：-代表普通文件，d表示目录，l表示链接，c表示字符设备文件（键盘、
 鼠标等），b表示块文件（硬盘等）。  \\
@@ -215,8 +214,7 @@ e：编辑crontab定时任务 \qquad l：列出crontab任务 \qquad r：删除�
 \begin{figure}[htb]
     \centering
     \includegraphics[scale=0.3]{imgs/crontab.png}
-\end{figure}
-\\
+\end{figure} \\
 使用crond定时执行脚本时，要确认对该脚本有执行权限。  \\
 重启crond服务：service crond restart
 
@@ -227,14 +225,36 @@ at命令格式：at [option] [time]  \\
 \begin{figure}[htb]
     \centering
     \includegraphics[scale=0.27]{imgs/at_time.png}
-\end{figure}
-\\
+\end{figure} \\
 用atq命令可以查看还未执行的任务，用atrm+任务编号可以删除任务。
 
+\section{磁盘和分区}
+\subsection{分区}
+$\bullet$ Linux的文件目录结构是独立且唯一的，比如只有一个根目录/，在根目录下面有一些必须的目录等。
+Linux通过“载入”的方式将磁盘的一个分区和一个目录联系起来，这个目录就叫这个分区的挂载点。 \\
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.27]{imgs/parts.png}
+\end{figure} \\
+$\bullet$ Linux硬盘分为IDE硬盘和SCSI硬盘，目前基本是SCSI硬盘。 \\
+对于IDE硬盘，驱动器标识符为hdx$\sim$。其中hd表示IDE硬盘；x为盘号（a为基本盘，b为基本从属盘，c为辅助
+主盘，d为辅助从属盘）；~表示分区，前四个分区用数字1到4表示他们是主分区或扩展分区，从5开始是逻辑
+分区。例如：hda3，hdb2。\\
+SCSI硬盘的驱动器标识符格式为sdx~，其中sd表示SCSI硬盘，其余部分的含义与IDE硬盘相同。
+\\
+$\bullet$ 查看设备挂载情况：lsblk 或 lsblk -f（可以显示UUID）
 
+\subsection{增加硬盘并挂载}
+磁盘分区：fdisk /dev/sdx（根据实际情况看是sdb还是sdc还是sdd等等），在分区最后需要输入w使分区生效  \\
+格式化分区：mkfs -t ext4 /dev/sdx$\sim$  \\
+挂载：mount [分区名称] [挂载点]，例如 mount /dev/sdb1 /newdisk  \\
+卸载：umount [分区名称] 或 umount [挂载点]  \\
+注意，使用mount挂载的分区重启后会失效，如果需要开机时自动挂载，需要修改/etc/fstab文件。
 
-
-
+\subsection{磁盘查询}
+$\bullet$ 查询系统磁盘整体使用情况：df -h  \\
+$\bullet$ 查询某个文件或某个目录的磁盘使用情况：du -h filename/dirname  \\
+$\bullet$ 用树状形式显示目录结构：tree dirname
 
 
 
