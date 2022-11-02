@@ -256,6 +256,29 @@ $\bullet$ 查询系统磁盘整体使用情况：df -h  \\
 $\bullet$ 查询某个文件或某个目录的磁盘使用情况：du -h filename/dirname  \\
 $\bullet$ 用树状形式显示目录结构：tree dirname
 
+\section{网络配置}
+查看网络配置信息：ifconfig \\
+测试主机之间网络连通性：ping 目的主机 \\
+配置静态IP：修改/etc/netplan/01-network-manager-all.yaml文件 \\
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.27]{imgs/static_ip.png}
+\end{figure} \\
+修改完之后用sudo netplan apply应用网络配置。 \\
+查看当前主机名：hostname \qquad 修改主机名：编辑/etc/hostname文件 \qquad 设置hosts映射：
+编辑/etc/hosts文件
+
+\section{进程管理}
+\subsection{基础}
+查看进程信息：ps -aux 或 ps -ef（显示内容略有不同）  \\
+通过pid终止进程：kill [-9] pid（选项-9表示强制终止，可以不带） \\
+通过进程名终止进程：killall 进程名（支持通配符） \\
+查看进程树：pstree [-pu]（选项p表示显示进程的pid，选项u表示显示进程的所属用户）
+
+\subsection{服务管理}
+
+
+
 
 
 
