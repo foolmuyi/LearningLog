@@ -208,7 +208,7 @@ chmod u=rwx,g=rx,o=r filename/dirname也可以写成 chmod 754 filename/dirname�
 \section{定时任务调度}
 
 \subsection{crond任务调度}
-基本语法：crontab [option]  \\
+基本语法：\textbf{crontab [option]}  \\
 e：编辑crontab定时任务 \qquad l：列出crontab任务 \qquad r：删除当前用户的所有crontab任务 \\
 时间格式：m(minute) h(hour) dom(dayOfMonth) mon(month) dow(dayOfWeek)  \\
 \begin{figure}[htb]
@@ -216,17 +216,17 @@ e：编辑crontab定时任务 \qquad l：列出crontab任务 \qquad r：删除�
     \includegraphics[scale=0.3]{imgs/crontab.png}
 \end{figure} \\
 使用crond定时执行脚本时，要确认对该脚本有执行权限。  \\
-重启crond服务：service crond restart
+重启crond服务：\textbf{service crond restart}
 
 \subsection{at定时任务}
 at指令是一次性定时任务，执行完一次后便不再执行。at的守护进程atd会以后台模式运行，默认情况下atd守护
 进程每60s检查一次作业队列。在使用at指令时，一定要保证atd进程已启动。  \\
-at命令格式：at [option] [time]  \\
+at命令格式：\textbf{at [option] [time]}  \\
 \begin{figure}[htb]
     \centering
     \includegraphics[scale=0.27]{imgs/at_time.png}
 \end{figure} \\
-用atq命令可以查看还未执行的任务，用atrm+任务编号可以删除任务。
+用\textbf{atq}命令可以查看还未执行的任务，用\textbf{atrm+任务编号}可以删除任务。
 
 \section{磁盘和分区}
 \subsection{分区}
@@ -242,40 +242,102 @@ $\bullet$ Linux硬盘分为IDE硬盘和SCSI硬盘，目前基本是SCSI硬盘。
 分区。例如：hda3，hdb2。\\
 SCSI硬盘的驱动器标识符格式为sdx~，其中sd表示SCSI硬盘，其余部分的含义与IDE硬盘相同。
 \\
-$\bullet$ 查看设备挂载情况：lsblk 或 lsblk -f（可以显示UUID）
+$\bullet$ 查看设备挂载情况：\textbf{lsblk} 或 \textbf{lsblk -f}（可以显示UUID）
 
 \subsection{增加硬盘并挂载}
-磁盘分区：fdisk /dev/sdx（根据实际情况看是sdb还是sdc还是sdd等等），在分区最后需要输入w使分区生效  \\
-格式化分区：mkfs -t ext4 /dev/sdx$\sim$  \\
-挂载：mount [分区名称] [挂载点]，例如 mount /dev/sdb1 /newdisk  \\
-卸载：umount [分区名称] 或 umount [挂载点]  \\
+磁盘分区：\textbf{fdisk /dev/sdx}（根据实际情况看是sdb还是sdc还是sdd等等），在分区最后需要输入w使分区生效  \\
+格式化分区：\textbf{mkfs -t ext4 /dev/sdx$\sim$}  \\
+挂载：\textbf{mount [分区名称] [挂载点]}，例如 mount /dev/sdb1 /newdisk  \\
+卸载：\textbf{umount [分区名称]} 或 \textbf{umount [挂载点]}  \\
 注意，使用mount挂载的分区重启后会失效，如果需要开机时自动挂载，需要修改/etc/fstab文件。
 
 \subsection{磁盘查询}
-$\bullet$ 查询系统磁盘整体使用情况：df -h  \\
-$\bullet$ 查询某个文件或某个目录的磁盘使用情况：du -h filename/dirname  \\
-$\bullet$ 用树状形式显示目录结构：tree dirname
+$\bullet$ 查询系统磁盘整体使用情况：\textbf{df -h}  \\
+$\bullet$ 查询某个文件或某个目录的磁盘使用情况：\textbf{du -h filename/dirname}  \\
+$\bullet$ 用树状形式显示目录结构：\textbf{tree dirname}
 
 \section{网络配置}
-查看网络配置信息：ifconfig \\
-测试主机之间网络连通性：ping 目的主机 \\
+查看网络配置信息：\textbf{ifconfig} \\
+测试主机之间网络连通性：\textbf{ping 目的主机} \\
 配置静态IP：修改/etc/netplan/01-network-manager-all.yaml文件 \\
 \begin{figure}[htb]
     \centering
     \includegraphics[scale=0.27]{imgs/static_ip.png}
 \end{figure} \\
-修改完之后用sudo netplan apply应用网络配置。 \\
-查看当前主机名：hostname \qquad 修改主机名：编辑/etc/hostname文件 \qquad 设置hosts映射：
+修改完之后用\textbf{sudo netplan apply}应用网络配置。 \\
+查看当前主机名：\textbf{hostname} \qquad 修改主机名：编辑/etc/hostname文件 \qquad 设置hosts映射：
 编辑/etc/hosts文件
 
 \section{进程管理}
 \subsection{基础}
-查看进程信息：ps -aux 或 ps -ef（显示内容略有不同）  \\
-通过pid终止进程：kill [-9] pid（选项-9表示强制终止，可以不带） \\
-通过进程名终止进程：killall 进程名（支持通配符） \\
-查看进程树：pstree [-pu]（选项p表示显示进程的pid，选项u表示显示进程的所属用户）
+查看进程信息：\textbf{ps -aux} 或 \textbf{ps -ef}（显示内容略有不同）  \\
+通过pid终止进程：\textbf{kill [-9] pid}（选项-9表示强制终止，可以不带） \\
+通过进程名终止进程：\textbf{killall 进程名}（支持通配符） \\
+查看进程树：\textbf{pstree [-pu]}（选项p表示显示进程的pid，选项u表示显示进程的所属用户）
 
 \subsection{服务管理}
+\begin{enumerate}
+\item 定义：服务（service）本质上就是进程，但是是运行在后台的，通常会监听某个端口，等待其他程序的
+请求，因此又称为守护进程，比如mysqld、sshd、防火墙等。 \\
+\item 服务管理指令：\textbf{service serviceName start|stop|restart|reload|status}  \\
+\item 查看系统运行级别(runlevel)：\textbf{systemctl get-default} \quad 设置系统运行级别：
+\textbf{systemctl set-default TARGET.target}。常用的运行级别是3（multi-user.target）和5（
+graphical.target）。  \\
+\item chkconfig指令：设置某个服务在某个运行级别是否自启动。 \\
+\textbf{chkconfig --list} \quad 查看chkconfig管理的服务  \\
+\textbf{chkconfig --level 3/5 serviceName on/off} \quad 设置某服务在3/5运行级别下是否自启动 \\
+通过chkconfig设置后需要重启才能生效。
+\item 除了service指令外，其实更多的服务是通过systemctl指令进行管理的，相关的命令如下：
+\begin{description}
+    \item[systemctl start|stop|restart|status serviceName] 启动/停止/重启/查看某服务
+    \item[systemctl list-unit-files] 查看所有服务的自启动设置
+    \item[systemctl enable serviceName] 设置某服务为开机自启动
+    \item[systemctl disable serviceName] 关闭某服务开机自启动
+    \item[systemctl is-enabled serviceName] 查询某服务是否是开机自启动
+\end{description}
+\item 打开或关闭指定的端口（firewall指令）
+\begin{description}
+    \item[firewall-cmd --permanent --add-port=port/protocol] 打开端口
+    \item[firewall-cmd --permanent --remove-port=port/protocol] 关闭端口
+    \item[firewall-cmd --reload] 打开或关闭端口后，reload以使其生效
+    \item[firewall-cmd --query-port=port/protocol] 查询某端口是否打开
+\end{description}
+\item 在ubuntu系统中，默认的防火墙软件是ufw，因此通过ufw指令来管理端口，常用指令如下：
+\begin{description}
+    \item[ufw enable] 启动ufw
+    \item[ufw disable] 停止ufw
+    \item[ufw status] 查询ufw状态
+    \item[ufw allow port/protocol] 打开端口（由于ufw默认配置了一些常用协议对应的端口，因此
+    也可以只写port或者protocol）
+    \item [ufw deny port/protocol] 关闭端口
+    \item [ufw delete allow/deny port/protocol] 删除打开/关闭某个端口的规则
+\end{description}
+\item top命令和ps命令类似，都是用来查看进程信息，但top命令显示的信息可以每隔一段时间自动更新，
+常用用法如下：
+\begin{description}
+    \item[top -d 5] 每隔5秒自动更新，如果不带数字直接top -d则默认每隔3秒更新
+    \item[top -i] 不显示idel和zombie进程
+    \item[top -p pid] 通过指定pid来单独监控某个进程
+\end{description}
+\item top交互操作
+\begin{description}
+    \item[输入P] 按CPU占用率排序
+    \item[输入M] 按内存占用率排序
+    \item[输入N] 按PID排序
+    \item[输入u，然后输入用户名] 按用户查看进程
+    \item[输入k，然后输入PID，然后输入9] kill某个进程
+    \item[输入q] 退出top
+\end{description}
+\item \textbf{netstat -anp} 查看系统的网络连接情况
+\end{enumerate}
+
+\section{软件包管理}
+
+
+
+
+
+
 
 
 
