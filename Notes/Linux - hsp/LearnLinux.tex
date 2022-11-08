@@ -17,6 +17,7 @@
 \usepackage{amsmath}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
+\usepackage{bm}
 
 % OTHER
 \usepackage{color}
@@ -85,23 +86,23 @@
 \end{figure}
 
 \subsection{Vim快捷键}
-复制当前行：yy \qquad 向下复制n行：nyy \qquad 粘贴：p \qquad 删除当前行：dd \qquad 
-向下删除n行：ndd \qquad 查找关键词：/keyword \qquad 定位首行：gg \qquad 定位第n行：ngg
-\qquad 定位末行：G \qquad 撤销：u
+复制当前行：\textbf{yy} \qquad 向下复制n行：\textbf{nyy} \qquad 粘贴：\textbf{p} \qquad 删除当前行：\textbf{dd} \qquad 
+向下删除n行：\textbf{ndd} \qquad 查找关键词：\textbf{/keyword} \qquad 定位首行：\textbf{gg} \qquad 定位第n行：\textbf{ngg}
+\qquad 定位末行：\textbf{G} \qquad 撤销：\textbf{u}
 
 \section{关机重启}
 
 \subsection{关机}
 最常用的关机命令是shutdown，用法如下： \\
-shutdown -h now \qquad 马上关机 \qquad shutdown -h 5 \qquad 5分钟后关机 \\
-shutdown -r now \qquad 马上重启 \\
-除了shutdown之外这几个命令也可以关机，但有细微区别：halt, poweroff, init 0.
+\textbf{shutdown -h now} \qquad 马上关机 \qquad shutdown -h 5 \qquad 5分钟后关机 \\
+\textbf{shutdown -r now} \qquad 马上重启 \\
+除了shutdown之外这几个命令也可以关机，但有细微区别：\textbf{halt}, \textbf{poweroff}, \textbf{init 0}.
 
 \subsection{重启}
-shutdown -r now \quad 或 \quad reboot
+\textbf{shutdown -r now} \quad 或 \quad \textbf{reboot}
 
 \subsection{同步}
-sync：把内存中的数据同步到磁盘  \\
+\textbf{sync}：把内存中的数据同步到磁盘  \\
 一般在关机或重启前应当先运行sync命令以防数据丢失，但目前shutdown/reboot/halt等命令在关机前均会
 先调用sync命令。
 
@@ -111,62 +112,62 @@ sync：把内存中的数据同步到磁盘  \\
 常用的运行级别是3和5，通过init 0/1/2/3/4/5/6指令可以切换运行级别。
 
 \section{用户管理}
-添加用户：useradd -m username（带-m参数以自动生成/home/username目录） \\
-修改用户密码：passwd username \\
-删除用户：userdel (-r) username（不带-r参数时删除用户但保留/home/username文件夹，带-r参数则
+添加用户：\textbf{useradd -m username}（带-m参数以自动生成/home/username目录） \\
+修改用户密码：\textbf{passwd username} \\
+删除用户：\textbf{userdel (-r) username}（不带-r参数时删除用户但保留/home/username文件夹，带-r参数则
 连同文件夹一起删除） \\
-查询用户信息：id username \\
-切换用户：su (-) username（若不带-仅切换用户，带-同时将当前目录切换到/home/username） \\
-新增用户组：groupadd groupname \\
-删除用户组：groupdel groupname \\
-修改用户所属组：usermod -g groupname username（在添加用户时可以通过-g参数直接指定所属组，即
-useradd -g groupname username，若没有指定组，则系统会自动新建一个和username同名的组） \\
+查询用户信息：\textbf{id username} \\
+切换用户：\textbf{su (-) username}（若不带-仅切换用户，带-同时将当前目录切换到/home/username） \\
+新增用户组：\textbf{groupadd groupname} \\
+删除用户组：\textbf{groupdel groupname} \\
+修改用户所属组：\textbf{usermod -g groupname username}（在添加用户时可以通过-g参数直接指定所属组，即
+\textbf{useradd -g groupname username}，若没有指定组，则系统会自动新建一个和username同名的组） \\
 相关文件：用户信息保存在/etc/passwd，密码信息保存在/etc/shadow，组的信息保存在/etc/group。
 
 \section{常用指令}
 
 \subsection{文件目录指令}
 
-pwd：显示当前目录的绝对路径 \\
-ls：显示当前目录下的文件（带-a参数显示隐藏文件，带-l参数以列表形式显示） \\
-mkdir (-p) dirname：创建文件夹，带-p参数才能创建多级目录  \\
-rmdir dirname：删除空目录 \qquad rm -rf dirname：删除非空目录  \\
-touch filename：创建一个空文件 \\
-cp (-r) source dest：拷贝文件(-r参数表示递归)  \\
-mv source/oldName dest/newName：移动文件或者重命名文件  \\
-cat (-n) filename：以只读方式查看文件（带-n参数显示行号）  \\
-less filename：按页显示文件内容，适合用来查看较大的文件  \\
-echo：输出内容到terminal，例如echo \$PATH查看环境变量 \\
-tail filename：显示文件末尾10行 \qquad tail -f filename：实时监控文件内容更新 \\
-$>$和$>>$：输出重定向，将本该输出到terminal的内容写入文件，例如echo 'something' > filename。
+\textbf{pwd}：显示当前目录的绝对路径 \\
+\textbf{ls}：显示当前目录下的文件（带-a参数显示隐藏文件，带-l参数以列表形式显示） \\
+\textbf{mkdir (-p) dirname}：创建文件夹，带-p参数才能创建多级目录  \\
+\textbf{rmdir dirname}：删除空目录 \qquad \textbf{rm -rf dirname}：删除非空目录  \\
+\textbf{touch filename}：创建一个空文件 \\
+\textbf{cp (-r) source dest}：拷贝文件(-r参数表示递归)  \\
+\textbf{mv source/oldName dest/newName}：移动文件或者重命名文件  \\
+\textbf{cat (-n) filename}：以只读方式查看文件（带-n参数显示行号）  \\
+\textbf{less filename}：按页显示文件内容，适合用来查看较大的文件  \\
+\textbf{echo}：输出内容到terminal，例如echo \$PATH查看环境变量 \\
+\textbf{tail filename}：显示文件末尾10行 \qquad \textbf{tail -f filename}：实时监控文件内容更新 \\
+\bm{$>$}和\bm{$>>$}：输出重定向，将本该输出到terminal的内容写入文件，例如echo 'something' > filename。
 区别在于>是覆盖，$>>$是追加。  \\
-ln -s source dest：创建软链接  \\
-history：查看执行过的指令
+\textbf{ln -s source dest}：创建软链接  \\
+\textbf{history}：查看执行过的指令
 
 \subsection{时间日期指令}
-date：显示时间日期信息，也可通过添加参数格式化输出  \\
-cal：显示本月日历
+\textbf{date}：显示时间日期信息，也可通过添加参数格式化输出  \\
+\textbf{cal}：显示本月日历
 
 \subsection{搜索查找指令}
-find dirname -name filename：在dirname目录下查找filename文件，输出其路径 \\
-locate filename：功能和find类似，也是输出filename文件的路径，但locate指令比find指令快得多，
+\textbf{find dirname -name filename}：在dirname目录下查找filename文件，输出其路径 \\
+\textbf{locate filename}：功能和find类似，也是输出filename文件的路径，但locate指令比find指令快得多，
 因为locate指令并不会真的扫描文件目录，而是在一个数据库中查找filename对应的路径。系统会每天自动
 更新该数据库，所以如果用locate指令查找刚刚创建的文件会找不到，或者查找刚刚删除的文件仍显示出删除
-前的路径。为避免这种情况，可以在locate前使用updatedb指令手动更新数据库。  \\
-which cmdname：查看某个指令所在的路径，如which ls  \\
-grep：搜索关键词，常和管道符号|一起使用，如cat filename | grep keyword
+前的路径。为避免这种情况，可以在locate前使用\textbf{updatedb}指令手动更新数据库。  \\
+\textbf{which cmdname}：查看某个指令所在的路径，如\textbf{which ls}  \\
+\textbf{grep}：搜索关键词，常和管道符号|一起使用，如\textbf{cat filename | grep keyword}
 
 \subsection{压缩解压指令}
-gzip/gunzip：gzip filename压缩文件（只能压缩为.gz），gunzip filename.gz解压文件  \\
+gzip/gunzip：\textbf{gzip filename}压缩文件（只能压缩为.gz），\textbf{gunzip filename.gz}解压文件  \\
 zip/unzip：zip常用选项-r递归压缩，unzip常用选项-d指定解压文件存放目录  \\
-tar：压缩用tar -zcvf filename.tar.gz files2zip，解压用tar -zxvf filename.tar.gz
+tar：压缩用\textbf{tar -zcvf filename.tar.gz files2zip}，解压用\textbf{tar -zxvf filename.tar.gz}
 
 \section{组管理和权限管理}
 
 \subsection{组管理}
 $\bullet$ 在Linux中每个用户必须属于一个组，不能独立存在。对于Linux中的文件有所有者、所在组、其他组三个概念。  \\
-$\bullet$ 通过chown username filename可以修改文件的所有者；通过chgrp groupname filename
-可以修改文件所在组；通过usermod -g groupname username可以修改用户所属的组。
+$\bullet$ 通过\textbf{chown username filename}可以修改文件的所有者；通过chgrp groupname filename
+可以修改文件所在组；通过\textbf{usermod -g groupname username}可以修改用户所属的组。
 
 \subsection{rwx权限}
 \ding{172} 当我们在某个路径下执行ls -l命令时，对于每个文件/目录，我们会得到类似下图所示的信息：
@@ -195,14 +196,14 @@ x：可执行，即可以cd进入该目录。 \\\\
 \subsection{修改rwx权限}
 chmod：修改文件或目录的权限，具体使用方法如下。  \\
 \ding{172} 通过u(所有者)、g(所在组)、o(其他用户)、a(所有用户)和+、-、=组合的方式修改权限。例如：
-chmod u=rwx,g=rx,o=r filename/dirname, \quad chmod u+x filename/dirname等。\\
+\textbf{chmod u=rwx,g=rx,o=r filename/dirname}, \quad \textbf{chmod u+x filename/dirname}等。\\
 \ding{173} 通过数字修改权限。前文已经提到过，rwx也可以用数字来表示（r=4, w=2, x=1）。因此，
-chmod u=rwx,g=rx,o=r filename/dirname也可以写成 chmod 754 filename/dirname。
+\textbf{chmod u=rwx,g=rx,o=r filename/dirname}也可以写成 \textbf{chmod 754 filename/dirname}。
 
 \subsection{修改所有者和所在组}
-修改所有者：chown newowner filename/dirname \\
-修改所有者和所在组：chown newowner:newgroup filename/dirname  \\
-修改所在组：chgrp newgroup filename/dirname
+修改所有者：\textbf{chown newowner filename/dirname} \\
+修改所有者和所在组：\textbf{chown newowner:newgroup filename/dirname}  \\
+修改所在组：\textbf{chgrp newgroup filename/dirname}
 
 
 \section{定时任务调度}
@@ -332,6 +333,30 @@ graphical.target）。  \\
 \end{enumerate}
 
 \section{软件包管理}
+\begin{enumerate}
+    \item rpm包：SUSE、RedHat、CentOS等采用
+    \begin{description}
+        \item[rpm -qa] 查询安装的全部rpm包
+        \item[rpm -q pkgName] 查询是否安装了某个软件包
+        \item[rpm -qi pkgName] 查询某个软件包的详细信息
+        \item[rpm -qf path] 查询某个文件所属的软件包
+        \item[rpm -e pkgName] 卸载rpm包
+        \item[rpm -ivh pkgPath] 安装rpm包
+    \end{description}
+    \item yum：rpm软件包的包管理器，能够从指定的服务器自动下载rpm包并安装，而且自动处理依赖关系。
+\end{enumerate}
+
+\section{Shell编程}
+\begin{enumerate}
+    \item Shell是一个命令解释器，它为用户提供了一个向Linux内核发送请求以便运行程序的界面系统
+    级程序，用户可以通过Shell来启动、挂起、停止甚至是编写一些程序。
+    \begin{figure}[htb]
+        \centering
+        \includegraphics[scale=0.3]{imgs/shell.png}
+    \end{figure}
+    \item Shell脚本以\textbf{\#!/bin/bash}开头，以指明使用的Shell。当直接执行脚本时，需要先
+    给脚本赋予执行权限，当使用\textbf{sh}执行时则不用赋予执行权限。
+\end{enumerate}
 
 
 
