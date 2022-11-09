@@ -86,9 +86,10 @@
 \end{figure}
 
 \subsection{Vim快捷键}
-复制当前行：\textbf{yy} \qquad 向下复制n行：\textbf{nyy} \qquad 粘贴：\textbf{p} \qquad 删除当前行：\textbf{dd} \qquad 
-向下删除n行：\textbf{ndd} \qquad 查找关键词：\textbf{/keyword} \qquad 定位首行：\textbf{gg} \qquad 定位第n行：\textbf{ngg}
-\qquad 定位末行：\textbf{G} \qquad 撤销：\textbf{u}
+复制当前行：\textbf{yy} \qquad 向下复制n行：\textbf{nyy} \qquad 粘贴：\textbf{p} \qquad
+删除当前行：\textbf{dd} \qquad 向下删除n行：\textbf{ndd} \qquad 查找关键词：\textbf{
+/keyword} \qquad 定位首行：\textbf{gg} \qquad 定位第n行：\textbf{ngg} \qquad 定位末行：
+\textbf{G} \qquad 撤销：\textbf{u} \qquad 显示/不显示行号：\textbf{set nu/nonu}
 
 \section{关机重启}
 
@@ -347,15 +348,100 @@ graphical.target）。  \\
 \end{enumerate}
 
 \section{Shell编程}
+\subsection{Shell入门}
+Shell是一个命令解释器，它为用户提供了一个向Linux内核发送请求以便运行程序的界面系统级程序，用户
+可以通过Shell来启动、挂起、停止甚至是编写一些程序。
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.3]{imgs/shell.png}
+\end{figure}  \\
+Shell脚本以\textbf{\#!/bin/bash}开头，以指明使用的Shell。当直接执行脚本时，需要先给脚本赋予
+执行权限，当使用\textbf{sh}执行时则不用赋予执行权限。
+
+\subsection{Shell变量}
 \begin{enumerate}
-    \item Shell是一个命令解释器，它为用户提供了一个向Linux内核发送请求以便运行程序的界面系统
-    级程序，用户可以通过Shell来启动、挂起、停止甚至是编写一些程序。
-    \begin{figure}[htb]
-        \centering
-        \includegraphics[scale=0.3]{imgs/shell.png}
-    \end{figure}
-    \item Shell脚本以\textbf{\#!/bin/bash}开头，以指明使用的Shell。当直接执行脚本时，需要先
-    给脚本赋予执行权限，当使用\textbf{sh}执行时则不用赋予执行权限。
+\item Linux Shell中的变量分为系统变量和用户自定义变量，常见的系统变量如\#HOME，\#SHELL，\#USER，
+\#PATH等，使用\textbf{set}命令可以查看所有的系统变量。
+\item 自定义变量
+\begin{description}
+    \item 定义变量：\textbf{变量名=值}（注意=前后不要有空格）
+    \item 撤销变量：\textbf{unset 变量名}
+    \item 声明静态变量：\textbf{readonly 变量名=值}（注意，静态变量不能被unset）
+\end{description}
+\item 变量名称可以由字母、数字和下划线组成，但不能以数字开头；变量名称一般习惯大写。
+\item 将命令的返回值赋给变量：使用反引号（例如\textbf{A=$\grave{}$date$\grave{}$}）或使用
+$\$$()（例如\textbf{A=\$(date)}）。
+\end{enumerate}
+
+\subsection{设置环境变量}
+\textbf{export VarName=Value}：将Shell变量输出为环境变量/全局变量 \\
+\textbf{source configFile}：使修改后的环境变量生效 \\
+\textbf{echo \$Var}：查询某个环境变量的值 \\
+Shell脚本中多行注释的写法：\textbf{:$<<$! code !}
+
+\subsection{位置参数变量}
+\begin{enumerate}
+    \item 当一个Shell脚本需要从外部获取参数时，需要用到位置参数变量，例如
+    ./myshell.sh 100 200,相关用法如下：
+    \begin{description}
+        \item[\$n] n为数字，\$0为命令本身，\$1$\sim$\$9代表第一到第九个参数，第十个及以后
+        的参数需要用大括号包含，比如\$\{10\}。
+        \item[\$*] 代表所有的参数，当直接使用\$*时，每个参数独立；当被双引号包围，即"\$*"时，
+        全部参数作为一个整体。
+        \item[\$@] 代表全部参数，不论是否使用双引号每个参数始终独立。
+        \item[\$\#] 代表参数的个数。
+    \end{description}
+\end{enumerate}
+
+\subsection{预定义变量}
+\begin{enumerate}
+    \item 预定义变量是Shell语言预先定义好的变量，可以在Shell脚本中直接使用。常用的预定义变量如下：
+    \begin{description}
+        \item[\$\$] 获取当前进程的PID。
+        \item[\$!] 获取后台运行的最后一个进程的PID。
+        \item[\$?] 获取最后一次执行的命令的执行结果，若为0表示命令正确执行，若为非0值表示命令
+        没有正确执行，可以结合C++中函数最后的return 0来理解。
+    \end{description}
+\end{enumerate}
+
+\subsection{运算符与表达式}
+\begin{enumerate}
+    \item Shell中进行算数运算有下面三种写法：
+    \begin{description}
+        \item[\$((expr))] 注意必须要用两层括号把表达式包起来，例如\$(((2+3)*4))。
+        \item[\$[expr]] 中括号里面可以使用小括号，但是最外层需要用中括号包起来，例如\$[(2+3)*4]。
+        \item[expr m + n] 采用这种方式运算符前后必须有空格；如果要将计算结果赋给一个变量需要
+        将整个表达式用反引号$\grave{}$ $\grave{}$包起来，包括expr本身；可用运算符有加$+$减$-$
+        乘$\backslash$$*$除/和取余$\%$，注意乘号要用转义符。举例：RES=
+        $\grave{}$ expr 2 + 3 $\grave{}$。
+    \end{description}
+\end{enumerate}
+
+\subsection{条件判断与流程控制}
+\begin{enumerate}
+    \item 基本语法：\\
+    \textbf{
+        if [\quad condition \quad]  \\
+        then \\
+        some code... \\
+        elif [\quad condition \quad]\\
+        then \\
+        some code... \\
+        fi
+    } \\
+    注意中括号里面condition前后必须有空格。
+    \item 字符串比较用\textbf{=}，例如：if [\quad "ok" = "ok" \quad]
+    \item 两个整数比较 \\
+    \textbf{-lt} 小于 \qquad \textbf{-le} 小于等于 \qquad \textbf{-eq} 等于 \qquad
+    \textbf{-gt} 大于 \qquad \textbf{-ge} 大于等于 \qquad \textbf{-ne} 不等于 \\
+    例如：if [\quad 20 -ge 23 \quad]
+    \item 判断文件权限 \\
+    \textbf{-r} 有读权限 \qquad \textbf{-w} 有写权限 \qquad \textbf{-x} 有执行权限 \\
+    例如：if [\quad -w abc.txt \quad]
+    \item 判断文件是否存在 \\
+    \textbf{-f} 文件存在且是一个普通文件 \qquad \textbf{-e} 文件存在 \qquad \textbf{-d}
+    文件存在且是一个目录 \\
+    例如：if [\quad -f abc.txt \quad]
 \end{enumerate}
 
 
