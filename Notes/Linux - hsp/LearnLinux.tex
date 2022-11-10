@@ -381,8 +381,7 @@ Shell脚本中多行注释的写法：\textbf{:$<<$! code !}
 
 \subsection{位置参数变量}
 \begin{enumerate}
-    \item 当一个Shell脚本需要从外部获取参数时，需要用到位置参数变量，例如
-    ./myshell.sh 100 200,相关用法如下：
+    \item 当一个Shell脚本需要从外部获取参数时，需要用到位置参数变量，例如 \\./myshell.sh 100 200,相关用法如下：
     \begin{description}
         \item[\$n] n为数字，\$0为命令本身，\$1$\sim$\$9代表第一到第九个参数，第十个及以后
         的参数需要用大括号包含，比如\$\{10\}。
@@ -417,7 +416,7 @@ Shell脚本中多行注释的写法：\textbf{:$<<$! code !}
     \end{description}
 \end{enumerate}
 
-\subsection{条件判断与流程控制}
+\subsection{条件判断}
 \begin{enumerate}
     \item 基本语法：\\
     \textbf{
@@ -444,7 +443,75 @@ Shell脚本中多行注释的写法：\textbf{:$<<$! code !}
     例如：if [\quad -f abc.txt \quad]
 \end{enumerate}
 
+\subsection{case语句}
+\textbf{
+    case \$Var in \\
+    ``Value1") \\
+    some code... \\
+    ;; \\
+    ``Value2'') \\
+    some code... \\
+    ;; \\
+    ............ \\
+    *) \\
+    some code... \\
+    ;; \\
+    esac
+}
 
+\subsection{for循环}
+1. 语法一 \\
+\textbf{
+    for Var in Value1 Value2 Value3... \\
+    do \\
+    some code... \\
+    done
+} \\
+2. 语法二(类似C++写法) \\
+\textbf{
+    for ((iniValue;condition;update)) \\
+    do \\
+    some code... \\
+    done
+}
+
+\subsection{while循环}
+\textbf{
+    while [\quad condition \quad] \\
+    do \\
+    some code... \\
+    done
+} \\
+注意condition前后必须有空格
+
+\subsection{read获取输入}
+\begin{enumerate}
+    \item 基本语法：\textbf{read OPTION PARAM}
+    \item OPTION:
+    \begin{description}
+        \item[-p] 指定读取输入时的提示信息
+        \item[-t] 指定读取输入时的等待时间，超过此时间则不再等待
+    \end{description}
+    \item PARAM：指定一个变量名，将读取值赋给此变量。
+\end{enumerate}
+
+\subsection{系统函数}
+\begin{enumerate}
+    \item \textbf{basename PATH SUFFIX} 获取文件名 \\
+    举例：basename /home/tom/test.txt \quad --> \quad test.txt  \\
+    basename /home/tom/test.txt .txt \quad --> \quad test
+    \item \textbf{dirname PATH} 返回文件路径最后一个/前面的部分 \\
+    举例：dirname /home/tom/test.txt \quad --> \quad /home/tom
+\end{enumerate}
+
+\subsection{自定义函数}
+\textbf{
+    funcName()\textbraceleft \\
+        some code... \\
+        return int \quad （这句也可以不写）\\
+    \textbraceright  \\
+} \\
+调用函数：\textbf{funcName Param1 Param2...}
 
 
 
