@@ -513,6 +513,46 @@ Shell脚本中多行注释的写法：\textbf{:$<<$! code !}
 } \\
 调用函数：\textbf{funcName Param1 Param2...}
 
+\section{日志管理}
+\begin{enumerate}
+    \item 系统的日志文件主要放在/var/log目录。
+    \item 日志管理服务：rsyslog。 \quad 查询rsyslog是否启动：\textbf{systemctl status 
+    rsyslog}。 \quad 查询rsyslog自启动设置：\textbf{systemctl list-unit-files | grep rsyslog}
+    \item rsyslog服务的配置文件在/etc/rsyslog.d/50-default.conf，在该文件中可以设置需要
+    记录的日志和该日志对应的日志文件，用户也可以仿照该形式自定义想要记录的日志。 \\
+    \begin{figure*}[htb]
+        \centering
+        \includegraphics[scale=0.13]{imgs/log_conf.png}
+        \includegraphics[scale=0.13]{imgs/log_conf_1.png}
+        \includegraphics[scale=0.13]{imgs/log_conf_2.png}
+    \end{figure*}
+    \item 日志轮替：对于某一项日志，每隔一段时间或当日志文件达到指定大小时自动建
+    立新的日志文件，便于管理和查看。Linux中使用logrotate服务来自动实现这一功能，
+    其配置文件在/etc/logrotate.conf和/etc/logrotate.d/*。
+\end{enumerate}
+
+\section{备份与恢复}
+\begin{enumerate}
+    \item 方式一：把需要备份的文件用tar命令打包，需要恢复的时候解压覆盖即可。
+    \item 方式二：使用dump和restore命令。
+    \item dump命令语法：\textbf{dump [options]}，常用选项如下：
+    \begin{figure}[htb]
+        \centering
+        \includegraphics[scale=0.2]{imgs/dump_opt.png}
+    \end{figure}
+    \item restore命令语法：\textbf{restore [mode] -f filename}，总共有4
+    种模式。
+    \begin{description}
+        \item[-C] 对比模式，将备份文件与已存在的文件进行对比；
+        \item[-i] 交互模式，在还原备份文件时询问用户；
+        \item[-r] 还原模式；
+        \item[-t] 查看模式，查看备份文件中有哪些文件。
+    \end{description}
+\end{enumerate}
+
+\section{Linux可视化管理工具}
+webmin和bt（宝塔）。
+
 
 
 
