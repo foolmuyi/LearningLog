@@ -296,10 +296,93 @@ iTOF：通过测量发射波和接受波之间的相位差间接测量时间。
 转换关系未知（待求），标定板和机器人底座的坐标转换未知（可消去）。因此只要在两个不同位姿分别拍照，
 消去标定板和机器人末端/底座的坐标转换，即可化为$AX=XB$形式，其中$X$为待求坐标转换。
 
+\section{附录一 \quad 相机内参和畸变}
 
+\subsection{简介}
+相机的四个坐标系：世界坐标系、相机坐标系、图像坐标系、像素坐标系。其中从世界坐标系
+到相机坐标系的变换也就是相机的外参矩阵，和相机在世界坐标系中的位姿有关，前文关于手
+眼标定的章节已有详述，此处不再赘述。而从相机坐标系到图像坐标系再到像素坐标系的变换
+即为相机的内参矩阵，和相机本身的结构尺寸有关，一般相机出厂时内参就确定下来了。
 
+\subsection{内参矩阵}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.3]{imgs/camera.png}
+\end{figure}
 
+如上图所示，我们把相机看作是针孔，现实世界中的一点$P$经过相机的光心$O$，投影到
+物理成像平面（图像传感器）上，变为点$P'$。对这个模型进一步简化，可以看作右图所示
+的相似三角形。设$O-x-y-z$为相机坐标系，根据三角形相似关系，则有：
+\begin{equation}
+    \frac{Z}{f} = -\frac{X}{X'} = -\frac{Y}{Y'}
+\end{equation}
+其中$f$表示焦距，有负号是因为坐标轴方向，也表示了成的像是倒立的。为了表示方便，
+我们可以把成像平面从相机的后面对称到前面去，负号就没有了，如下图所示：
 
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.3]{imgs/img_plane.png}
+\end{figure} 
+
+整理解出$P'$的坐标:
+\begin{equation}
+    X' = f\frac{X}{Z}
+    \qquad
+    Y' = f\frac{Y}{Z}
+\end{equation}
+至此，我们就把真实世界中的一点$P$映射到了物理成像平面上，即从相机坐标系到图像坐
+标系。值得注意的是，此时$X'$、$Y'$的单位仍为长度单位，而不是像素，因此我们还需
+要进一步从图像坐标系转换到像素坐标系。像素坐标系$o-u-v$也位于物理成像平面上，其
+中原点$o$位于图像的左上角，$u$轴与$x$轴平行，$v$轴与$y$轴平行。设像素和长度在
+$u$轴上缩放倍数为$\alpha$，在$v$轴上缩放倍数为$\beta$，同时原点从成像平面中心
+移动到左上角移动了$[c_x, c_y]^T$，则点$P'$在像素坐标系中的坐标$[u,v]^T$为：
+\begin{equation}
+    \begin{split}
+    u = \alpha X' + c_x = \alpha f\frac{X}{Z}+c_x = f_x\frac{X}{Z}+c_x
+    \\
+    v = \beta Y' + c_y = \beta f\frac{Y}{Z}+c_y = f_y\frac{Y}{Z}+c_y
+    \end{split}
+\end{equation}
+其中$f_x=\alpha f$，$f_y = \beta f$。$f_x$，$f_y$的单位是像素。用齐次坐标
+把上式写成矩阵的形式：
+\begin{equation}
+    \begin{pmatrix}
+        u \\ v \\ 1
+    \end{pmatrix}
+    =
+    \frac{1}{Z}
+    \begin{pmatrix}
+        f_x & 0 & c_x  \\
+        0 & f_y & c_y  \\
+        0 & 0 & 1
+    \end{pmatrix}
+    \begin{pmatrix}
+        X \\ Y \\ Z
+    \end{pmatrix}
+    =
+    \frac{1}{Z}\mathbf{K}\mathbf{P}
+\end{equation}
+如果把$Z$写到等式左边，就变成了：
+\begin{equation}
+    Z
+    \begin{pmatrix}
+        u \\ v \\ 1
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        f_x & 0 & c_x  \\
+        0 & f_y & c_y  \\
+        0 & 0 & 1
+    \end{pmatrix}
+    \begin{pmatrix}
+        X \\ Y \\ Z
+    \end{pmatrix}
+    =
+    \mathbf{K}\mathbf{P}
+\end{equation}
+其中的$\mathbf{K}$即为相机的内参矩阵。
+
+\subsection{畸变}
 
 
 
