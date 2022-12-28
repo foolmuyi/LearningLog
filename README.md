@@ -4,7 +4,7 @@
 
 ### DOING
 
-#### MQL5: [MQL5文档](https://www.mql5.com/zh/docs)
+#### MQL5: [MQL5编程入门教程 - 哔哩哔哩](https://space.bilibili.com/342693735/channel/collectiondetail?sid=857554)
 
 #### Python Tutorials
 ##### Socket Programming：[Socket Programming in Python - realpython.com](https://realpython.com/python-sockets/)
