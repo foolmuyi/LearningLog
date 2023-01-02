@@ -173,6 +173,7 @@ MQL5提供了一些用来进行数据类型转换的函数，我们可以直接�
 | [`ColorToString`](#ColorToString) | 将`color`类型转换为RGB字符串或直接显示颜色名称 |
 
 <h4 id='CharToString'> CharToString </h4>
+
 ```
 string CharToString(
   uchar char_code;　　　　// 交易品种的数值代码
@@ -180,6 +181,7 @@ string CharToString(
 ```
 
 <h4 id='CharArrayToString'> CharArrayToString </h4>
+
 ```
 string CharArrayToString(
   uchar  array[],            // 数组
@@ -190,6 +192,7 @@ string CharArrayToString(
 ```
 
 <h4 id='CharArrayToStruct'> CharArrayToStruct </h4>
+
 ```
 bool CharArrayToStruct(
   void&         struct_object,        // 结构
@@ -199,6 +202,7 @@ bool CharArrayToStruct(
 ```
 
 <h4 id='StructToCharArray'> StructToCharArray </h4>
+
 ```
 bool  StructToCharArray(
    const void&  struct_object,     //结构
@@ -208,6 +212,7 @@ bool  StructToCharArray(
 ```
 
 <h4 id='ColorToARGB'> ColorToARGB </h4>
+
 ```
 uint  ColorToARGB(
    color  clr,          // 以color格式转换颜色
@@ -216,6 +221,7 @@ uint  ColorToARGB(
 ```
 
 <h4 id='ColorToString'> ColorToString </h4>
+
 ```
 string  ColorToString(
    color  color_value,     // 颜色值
