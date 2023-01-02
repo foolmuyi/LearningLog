@@ -165,13 +165,62 @@ enum intervals
 MQL5提供了一些用来进行数据类型转换的函数，我们可以直接使用。某些函数除了进行数据类型转换外，还具有指定输出值小数点后的位数、指定输出时间格式等功能。
 | 函数 | 功能 |
 | :-: | :-:  |
-| [`CharToString`](#CharToString-url) | 将字符型转换为字符串 |
+| [`CharToString`](#CharToString) | 将`uchar`转换为字符串 |
+| [`CharArrayToString`](#CharArrayToString) | 将`uchar`数组转换为字符串 |
+| [`CharArrayToStruct`](#CharArrayToStruct) | 将`uchar`数组转换为POD结构 |
+| [`StructToCharArray`](#StructToCharArray) | 将POD结构转换为`uchar`数组 |
+| [`ColorToARGB`](#ColorToARGB) | 将`color`类型转换为`uint`类型，获取RGB值 |
+| [`ColorToString`](#ColorToString) | 将`color`类型转换为RGB字符串或直接显示颜色名称 |
 
-<h4 id='CharToString-url'> CharToString </h4>
+<h4 id='CharToString'> CharToString </h4>
 ```
 string CharToString(
-  uchar char_code;
-)
+  uchar char_code;　　　　// 交易品种的数值代码
+);
+```
+
+<h4 id='CharArrayToString'> CharArrayToString </h4>
+```
+string CharArrayToString(
+  uchar  array[],            // 数组
+  int    start=0,            // 数组启动位置
+  int    count=-1,           // 交易品种数
+  uint   codepage=CP_ACP     // 代码页
+);
+```
+
+<h4 id='CharArrayToStruct'> CharArrayToStruct </h4>
+```
+bool CharArrayToStruct(
+  void&         struct_object,        // 结构
+  const uchar&  char_array[],         // 数组
+  uint          start_pos=0           // 数组中的起始位置
+);
+```
+
+<h4 id='StructToCharArray'> StructToCharArray </h4>
+```
+bool  StructToCharArray(
+   const void&  struct_object,     //结构
+   uchar&       char_array[],      // 数组
+   uint         start_pos=0        // 数组中的起始位置
+   );
+```
+
+<h4 id='ColorToARGB'> ColorToARGB </h4>
+```
+uint  ColorToARGB(
+   color  clr,          // 以color格式转换颜色
+   uchar  alpha=255     // alpha通道管理彩色透明度
+   );
+```
+
+<h4 id='ColorToString'> ColorToString </h4>
+```
+string  ColorToString(
+   color  color_value,     // 颜色值
+   bool   color_name       // 是否显示颜色名称
+   );
 ```
 
 
