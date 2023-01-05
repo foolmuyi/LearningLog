@@ -171,6 +171,20 @@ MQL5提供了一些用来进行数据类型转换的函数，我们可以直接�
 | [`StructToCharArray`](#StructToCharArray) | 将POD结构转换为`uchar`数组 |
 | [`ColorToARGB`](#ColorToARGB) | 将`color`类型转换为`uint`类型，获取RGB值 |
 | [`ColorToString`](#ColorToString) | 将`color`类型转换为RGB字符串或直接显示颜色名称 |
+| [`DoubleToString`](#DoubleToString) | 将double值转换为字符串 |
+| [`EnumToString`](#EnumToString) | 将枚举值转换为文本格式 |
+| [`IntegerToString`](#IntegerToString) | 将整型值转换为特定长度的字符串 |
+| [`ShortToString`](#ShortToString) | 将交易品种代码(unicode)转换为字符串代码 |
+| [`ShortArrayToString`](#ShortArrayToString) | 将数组的一部分转换为字符串 |
+| [`TimeToString`](#TimeToString) | 将timestamp转换为时间格式的字符串 |
+| [`NormalizeDouble`](#NormalizeDouble) | 将浮点数按指定精确度四舍五入 |
+| [`StringToCharArray`](#StringToCharArray) | 逐个字母将字符串从Unicode转换为ANSI，存入一个uchar数组，返回数组元素个数 |
+| [`StringToColor`](#StringToColor) | 将RGB字符串或颜色名称字符串转换为color类型 |
+| [`StringToDouble`](#StringToDouble) | 将字符串转换为double值 |
+| [`StringToInteger`](#StringToInteger) | 将字符串转换为整型 |
+| [`StringToShortArray`](#StringToShortArray) | 逐个字母将字符串复制到一个ushort数组中，返回数组元素个数 |
+| [`StringToTime`](#StringToTime) | 将指定时间格式的字符串转换为datetime类型 |
+| [`StringFormat`](#StringFormat) | 字符串格式化输出 |
 
 <h4 id='CharToString'> CharToString </h4>
 
@@ -229,6 +243,132 @@ string  ColorToString(
    );
 ```
 
+<h4 id='DoubleToString'> DoubleToString </h4>
+
+```
+string  DoubleToString(
+   double  value,      // 数字
+   int     digits=8    // 小数点后的位数
+   );
+```
+
+<h4 id='EnumToString'> EnumToString </h4>
+
+```
+string  EnumToString(
+   any_enum  value      // 任何类型的枚举值
+   );
+```
+
+<h4 id='IntegerToString'> IntegerToString </h4>
+
+```
+string  IntegerToString(
+   long    number,              // 数字
+   int     str_len=0,           // 字符串结果长度
+   ushort  fill_symbol=' '      // 填充物
+   );
+```
+
+<h4 id='ShortToString'> ShortToString </h4>
+
+```
+string  ShortToString(
+   ushort  symbol_code      // 交易品种
+   );
+```
+
+<h4 id='ShortArrayToString'> ShortArrayToString </h4>
+
+```
+string  ShortArrayToString(
+   ushort  array[],      // 数组
+   int     start=0,      // 数组中的启动位置
+   int     count=-1      // 交易品种数
+   );
+```
+
+<h4 id='TimeToString'> TimeToString </h4>
+
+```
+string  TimeToString(
+   datetime  value,                           // 数字
+   int       mode=TIME_DATE|TIME_MINUTES      // 输出形式
+   );
+```
+
+<h4 id='NormalizeDouble'> NormalizeDouble </h4>
+
+```
+double  NormalizeDouble(
+   double  value,      // 浮点值
+   int     digits      // 小数点后的数字数
+   );
+```
+
+<h4 id='StringToCharArray'> StringToCharArray </h4>
+
+```
+int  StringToCharArray(
+   string  text_string,         // 源字符串
+   uchar&  array[],             // 数组
+   int     start=0,             // 数组中的启动位置
+   int     count=-1             // 交易品种数
+   uint    codepage=CP_ACP      // 代码页
+   );
+```
+
+<h4 id='StringToColor'> StringToColor </h4>
+
+```
+color  StringToColor(
+   string  color_string      // 字符串颜色表示
+   );
+```
+
+<h4 id='StringToDouble'> StringToDouble </h4>
+
+```
+double  StringToDouble(
+   string  value      // 字符串
+   );
+```
+
+<h4 id='StringToInteger'> StringToInteger </h4>
+
+```
+long  StringToInteger(
+   string  value      // 字符串
+   );
+```
+
+<h4 id='StringToShortArray'> StringToShortArray </h4>
+
+```
+int  StringToShortArray(
+   string  text_string,     // 源字符串
+   ushort& array[],         // 数组
+   int     start=0,         // 数组启动位置
+   int     count=-1         // 交易品种数
+   );
+```
+
+<h4 id='StringToTime'> StringToTime </h4>
+
+```
+datetime  StringToTime(
+   const string  time_string      // 日期字符串
+   );
+```
+
+<h4 id='StringFormat'> StringFormat </h4>
+
+```
+string  StringFormat(
+   string  format,     // 带有格式描述的字符串
+   ...     ...         // 参量
+   );
+```
 
 ## 运算符
 
