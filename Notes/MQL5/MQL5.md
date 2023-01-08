@@ -22,7 +22,15 @@
     - [枚举类型](#枚举类型)
     - [数据类型转换](#数据类型转换)
     - [类型转换函数](#类型转换函数)
+    - [输出信息函数](#输出信息函数)
   - [运算符](#运算符)
+    - [算数运算符](#算数运算符)
+      - [加法`+`](#加法)
+      - [减法`-`](#减法-)
+      - [乘除法`*` `/`](#乘除法-)
+      - [取模`%`](#取模)
+      - [自增`++`自减`--`](#自增自减--)
+      - [幂运算](#幂运算)
   - [流程控制语句](#流程控制语句)
   - [数组](#数组)
   - [排序方法](#排序方法)
@@ -171,19 +179,19 @@ MQL5提供了一些用来进行数据类型转换的函数，我们可以直接�
 | [`StructToCharArray`](#StructToCharArray) | 将POD结构转换为`uchar`数组 |
 | [`ColorToARGB`](#ColorToARGB) | 将`color`类型转换为`uint`类型，获取RGB值 |
 | [`ColorToString`](#ColorToString) | 将`color`类型转换为RGB字符串或直接显示颜色名称 |
-| [`DoubleToString`](#DoubleToString) | 将double值转换为字符串 |
+| [`DoubleToString`](#DoubleToString) | 将`double`值转换为字符串 |
 | [`EnumToString`](#EnumToString) | 将枚举值转换为文本格式 |
 | [`IntegerToString`](#IntegerToString) | 将整型值转换为特定长度的字符串 |
 | [`ShortToString`](#ShortToString) | 将交易品种代码(unicode)转换为字符串代码 |
 | [`ShortArrayToString`](#ShortArrayToString) | 将数组的一部分转换为字符串 |
 | [`TimeToString`](#TimeToString) | 将timestamp转换为时间格式的字符串 |
 | [`NormalizeDouble`](#NormalizeDouble) | 将浮点数按指定精确度四舍五入 |
-| [`StringToCharArray`](#StringToCharArray) | 逐个字母将字符串从Unicode转换为ANSI，存入一个uchar数组，返回数组元素个数 |
-| [`StringToColor`](#StringToColor) | 将RGB字符串或颜色名称字符串转换为color类型 |
-| [`StringToDouble`](#StringToDouble) | 将字符串转换为double值 |
+| [`StringToCharArray`](#StringToCharArray) | 逐个字母将字符串从Unicode转换为ANSI，存入一个`uchar`数组，返回数组元素个数 |
+| [`StringToColor`](#StringToColor) | 将RGB字符串或颜色名称字符串转换为`color`类型 |
+| [`StringToDouble`](#StringToDouble) | 将字符串转换为`double`值 |
 | [`StringToInteger`](#StringToInteger) | 将字符串转换为整型 |
-| [`StringToShortArray`](#StringToShortArray) | 逐个字母将字符串复制到一个ushort数组中，返回数组元素个数 |
-| [`StringToTime`](#StringToTime) | 将指定时间格式的字符串转换为datetime类型 |
+| [`StringToShortArray`](#StringToShortArray) | 逐个字母将字符串复制到一个`ushort`数组中，返回数组元素个数 |
+| [`StringToTime`](#StringToTime) | 将指定时间格式的字符串转换为`datetime`类型 |
 | [`StringFormat`](#StringFormat) | 字符串格式化输出 |
 
 <h4 id='CharToString'> CharToString </h4>
@@ -370,7 +378,63 @@ string  StringFormat(
    );
 ```
 
+### 输出信息函数
+输出信息函数指的是将字符串类型的数据输出到控制台的函数，在MQL5中主要有`Print`和`PrintFormat`（可简写为`printf`）两个函数。
+| 函数 | 功能 |
+| :-: | :-: |
+| `Print` | 拼接字符串，输出到控制台 |
+| `PrintFormat` | 格式化输出字符串，根据指定的类型强制转换输出的值 |
+
+常用的格式化输出符号：
+| 符号 | 类型 | 输出格式 |
+| :-: | :-: | :-: |
+| c | int | Unicode编码 |
+| C | int | ANSI编码 |
+| d | int | 有符号十进制整数 |
+| i | int | 有符号十进制整数 |
+| u | int | 无符号十进制整数 |
+| o | int | 无符号八进制整数 |
+| x | int | 无符号十六进制整数，使用abcdef |
+| X | int | 无符号十六进制整数，使用ABCDEF |
+| e | double | 使用科学计数法表示 |
+| f | double | 有符号浮点数，f前面可以加.和数字来指定输出小数位数，如.2f |
+| s | string | 字符串 |
+
 ## 运算符
+
+### 算数运算符
+
+#### 加法`+`
+- 数字相加：数值运算
+- bool值相加：true为1，false为0，结果等于0则为false，否则为true
+- 字符串相加：字符串拼接
+
+#### 减法`-`
+- 数字相减：数值运算
+- bool值相减：true为1，false为0，结果等于0则为false，否则为true
+- 字符串相减：不支持
+
+#### 乘除法`*` `/`
+- 乘除法一般只用于数值计算，不支持对字符串进行操作
+- 使用除法时需要注意，若返回值为浮点型，但被除数和除数均为整型，返回值将是整数，例如10/3返回3.0。解决办法是将被除数或者除数写成浮点型，例如10.0/3或10/3.0，返回值将为3.333333。
+
+#### 取模`%`
+只用于两个整数取余数的运算。
+
+#### 自增`++`自减`--`
+单独使用时`a++`和`++a`没有区别，都是使`a`自增1。但在运算中使用自增时需要注意，前置自增（`++a`）先自增再运算，后置自增（`a++`）先运算再自增，具体区别见下面的例子。
+
+```
+uint a = 10;
+uint b = a++ * 2;
+uint c = ++a * 2;
+Print(b);  // 20
+Print(c);  // 24
+```
+
+自减与自增相同，前置自减和后置自减单独使用时没有区别，用在运算中时需要注意。
+
+#### 幂运算
 
 ## 流程控制语句
 
