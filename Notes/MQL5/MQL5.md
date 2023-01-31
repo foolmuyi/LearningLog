@@ -37,6 +37,8 @@
     - [运算符优先级](#运算符优先级)
   - [流程控制语句](#流程控制语句)
     - [`if else`语句](#if-else语句)
+    - [三目运算符](#三目运算符)
+    - [`switch`语句](#switch语句)
   - [数组](#数组)
   - [排序方法](#排序方法)
   - [函数](#函数)
@@ -476,6 +478,48 @@ a %= 2;    // a = 1
 ## 流程控制语句
 
 ### `if else`语句
+
+```
+if(condition1)
+{
+   do task1...
+}
+else if(condition2)
+{
+   do task2...
+}
+else
+{
+   do task3...
+}
+```
+
+### 三目运算符
+
+`expr1?expr2:expr3`
+
+当表达式1为`true`时，返回表达式2的值；为`false`时，返回表达式3的值。
+
+### `switch`语句
+
+```
+switch(expr)
+{
+   case value1:
+      do task1;
+      break;
+   case value2:
+      do task2;
+      break;
+   ......
+   default:
+      do default task;
+}
+```
+
+
+
+
 
 ## 数组
 
