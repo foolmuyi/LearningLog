@@ -39,6 +39,9 @@
     - [`if else`语句](#if-else语句)
     - [三目运算符](#三目运算符)
     - [`switch`语句](#switch语句)
+    - [`while`语句](#while语句)
+    - [`do while`语句](#do-while语句)
+    - [`for`语句](#for语句)
   - [数组](#数组)
   - [排序方法](#排序方法)
   - [函数](#函数)
@@ -517,7 +520,35 @@ switch(expr)
 }
 ```
 
+### `while`语句
 
+```
+while(condition)
+{
+   do task...
+}
+```
+
+### `do while`语句
+
+`do while`语句是`while`语句的变体，主要区别在于进入`while`条件判断之前，会先执行一次循环体的内容。
+
+```
+do
+{
+   do task...
+}
+while(condition);
+```
+
+### `for`语句
+
+```
+for(init_value; condition; init_value++)
+{
+   do task...
+}
+```
 
 
 
