@@ -53,6 +53,9 @@
       - [创建二维数组](#创建二维数组)
     - [数组函数](#数组函数)
   - [排序方法](#排序方法)
+    - [选择排序](#选择排序)
+    - [插入排序](#插入排序)
+    - [冒泡排序](#冒泡排序)
   - [函数](#函数)
   - [结构体](#结构体)
   - [账户信息函数](#账户信息函数)
@@ -646,6 +649,82 @@ MQL5提供了一些对数组进行操作的函数，我们在编写程序时可�
 
 
 ## 排序方法
+
+### 选择排序
+
+下面是使用选择排序算法对一个数组进行升序排列的例子：
+
+```
+void selectionSort(double &arr[])
+{
+    int n = ArraySize(arr);
+    for (int i = 0; i < n-1; i++)
+    {
+        int minIndex = i;
+        for (int j = i+1; j < n; j++)
+        {
+            if (arr[j] < arr[minIndex])
+                minIndex = j;
+        }
+        double temp = arr[minIndex];
+        arr[minIndex] = arr[i];
+        arr[i] = temp;
+    }
+}
+```
+
+### 插入排序
+
+下面是使用插入排序算法对一个数组进行升序排列的例子：
+
+```
+void insertionSort(double &arr[])
+{
+   int n = ArraySize(arr);
+   for (int i = 1; i < n; i++)
+   {
+      int j = i;
+      while (j > 0)
+      {
+         if (arr[j] < arr[j-1])
+         {
+            double temp = arr[j];
+            arr[j] = arr[j-1];
+            arr[j-1] = temp;
+            j--;
+         }
+         else j=0;
+      }
+   }
+}
+```
+
+### 冒泡排序
+
+下面是使用冒泡排序算法对一个数组进行升序排列的例子：
+
+```
+void BubbleSort(double &arr[])
+{
+   int n = ArraySize(arr);
+   for (int i = 0; i < n-1; i++)
+   {
+      bool swapped = false;
+      for (int j = 0; j < n-i-1; j++)
+      {
+         if (arr[j] > arr[j+1])
+         {
+            double temp = arr[j];
+            arr[j] = arr[j+1];
+            arr[j+1] = temp;
+            swapped = true;
+         }
+      }
+      if (!swapped)
+         break;
+   }
+}
+```
 
 ## 函数
 
