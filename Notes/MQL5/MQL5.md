@@ -64,8 +64,12 @@
   - [结构体](#结构体)
     - [结构体的定义](#结构体的定义)
     - [结构体数组](#结构体数组)
+    - [结构体函数](#结构体函数)
+    - [结构体嵌套](#结构体嵌套)
   - [账户信息函数](#账户信息函数)
   - [货币对信息函数](#货币对信息函数)
+    - [交易品种信息函数](#交易品种信息函数)
+    - [获取市场深度信息](#获取市场深度信息)
   - [交易操作函数](#交易操作函数)
 
 
@@ -817,13 +821,53 @@ Student stu[3] = {
 };
 ```
 
+### 结构体函数
 
+结构体和结构体数组也可以作为参数传递给函数，例如：
 
+```
+void MyPrint(Student &stu)
+   {
+      Print(stu.name);
+   }
+```
 
+### 结构体嵌套
 
+结构体可以进行嵌套，例如：
+
+```
+struct Score
+{
+   int math;
+   int physics;
+};
+
+struct Student
+{
+   int id;
+   string name;
+   int age;
+   Score score;
+};
+```
 
 ## 账户信息函数
 
+MQL5将账户的相关信息根据数据类型不同分成了三类（Double, Integer, String），相应地提供了三个函数来获取对应数据类型的信息：`AccountInfoDouble()`、`AccountInfoInteger()`、`AccountInfoString()`。通过选择不同的函数和对应的参数就可以获得想要的账户信息，例如：通过`AccountInfoDouble(ACCOUNT_BALANCE)`获取账户结余，通过`AccountInfoInteger(ACCOUNT_LEVERAGE)`获取账户杠杆倍数，通过`AccountInfoString(ACCOUNT_NAME)`获取账户名称。
+
 ## 货币对信息函数
+
+### 交易品种信息函数
+
+- 获取当前货币对名称：`Symbol()`或`_Symbol。
+- 获取`Double`类型信息：`SymbolInfoDouble()`。例如获取卖价：`double ask=SymbolInfoDouble(Symbol(),SYMBOL_ASK)`。
+- 获取`Int`类型信息：`SymbolInfoInteger()`。
+- 获取`String`类型信息：`SymbolInfoString()`。
+
+### 获取市场深度信息
+- `MarketBookAdd()`：获取所选交易品种的开盘市场深度信息，一般用在`OnInit()`函数中；
+- `MarketBookRelease()`：获取所选交易品种的收盘市场报价信息，一般用在`OnDeinit()`函数中；
+- `MarketBookGet()`：返回一个结构体数组，包含当前的买卖报价市场深度信息。
 
 ## 交易操作函数
