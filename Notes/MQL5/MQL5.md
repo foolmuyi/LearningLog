@@ -71,6 +71,7 @@
     - [交易品种信息函数](#交易品种信息函数)
     - [获取市场深度信息](#获取市场深度信息)
   - [交易操作函数](#交易操作函数)
+    - [交易请求和响应结构体](#交易请求和响应结构体)
 
 
 # MQL5学习笔记
@@ -871,3 +872,50 @@ MQL5将账户的相关信息根据数据类型不同分成了三类（Double, In
 - `MarketBookGet()`：返回一个结构体数组，包含当前的买卖报价市场深度信息。
 
 ## 交易操作函数
+
+### 交易请求和响应结构体
+
+进行交易操作时，通过`OrderSend()`函数向服务器发送订单，其中一个参数是交易请求结构体`MqlTradeRequest`，另一个参数是交易响应结构体`MqlTradeResult`。
+
+- 交易请求结构体`MqlTradeRequest`
+
+```
+struct MqlTradeRequest
+  {
+   ENUM_TRADE_REQUEST_ACTIONS    action;           // 交易操作类型
+   ulong                         magic;            // EA交易 ID (幻数)
+   ulong                         order;            // 订单号
+   string                        symbol;           // 交易的交易品种
+   double                        volume;           // 一手需求的交易量
+   double                        price;            // 价格
+   double                        stoplimit;        // 订单止损限价点位
+   double                        sl;               // 订单止损价位点位
+   double                        tp;               // 订单盈利价位点位
+   ulong                         deviation;        // 需求价格最可能的偏差
+   ENUM_ORDER_TYPE               type;             // 订单类型
+   ENUM_ORDER_TYPE_FILLING       type_filling;     // 订单执行类型
+   ENUM_ORDER_TYPE_TIME          type_time;        // 订单执行时间
+   datetime                      expiration;       // 订单终止期 (为 ORDER_TIME_SPECIFIED 类型订单)
+   string                        comment;          // 订单注释
+   ulong                         position;         // 持仓编号
+   ulong                         position_by;      // 反向持仓编号
+  };
+```
+
+- 交易响应结构体`MqlTradeResult`
+
+```
+struct MqlTradeResult
+  {
+   uint     retcode;          // 操作返回代码
+   ulong    deal;             // 交易订单号，如果完成的话
+   ulong    order;            // 订单号，如果下订单的话
+   double   volume;           // 交易交易量，经纪人确认的
+   double   price;            // 交易价格，经纪人确认的
+   double   bid;              // 当前买入价
+   double   ask;              // 当前卖出价
+   string   comment;          // 经纪人操作注释 (默认填充操作描述)
+   uint     request_id;       // 分派期间通过程序端设置Request ID 
+   int      retcode_external; // 返回外部交易系统代码
+  };
+```
