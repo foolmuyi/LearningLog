@@ -9,14 +9,13 @@
 #### Python Tutorials
 ##### Socket Programming：[Socket Programming in Python - realpython.com](https://realpython.com/python-sockets/)
 
+#### cplusplus.com Tutorial: [C++ Language - cplusplus.com](https://cplusplus.com/doc/tutorial/)
 
 ### TODO
 
 #### Control Bootcamp：[Control Bootcamp - Youtube](https://youtu.be/Pi7l8mMjYVE)
 
 #### C++ in 10 hours：[C++ for Beginners - Youtube](https://youtu.be/iBG0fN8lY8Y)
-
-#### cplusplus.com Tutorial: [C++ Language - cplusplus.com](https://cplusplus.com/doc/tutorial/)
 
 
 ### DONE
