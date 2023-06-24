@@ -17,6 +17,8 @@
 
 #### C++ in 10 hours：[C++ for Beginners - Youtube](https://youtu.be/iBG0fN8lY8Y)
 
+#### Robotic Manipulation: [Robotci Manipulation - MIT](https://manipulation.csail.mit.edu/)
+
 
 ### DONE
 
