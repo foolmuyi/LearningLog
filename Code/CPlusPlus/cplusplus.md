@@ -12,6 +12,15 @@
       - [Fundamental data types](#fundamental-data-types)
       - [Declaration of variables](#declaration-of-variables)
       - [Initialization of variables](#initialization-of-variables)
+      - [Type deduction: auto and decltype](#type-deduction-auto-and-decltype)
+    - [Constants](#constants)
+      - [Literals](#literals)
+      - [Typed constant expressions](#typed-constant-expressions)
+      - [Preprocessor definitions (#define)](#preprocessor-definitions-define)
+    - [Operators](#operators)
+      - [Assignment Operator (=)](#assignment-operator-)
+      - [Arithmetic operators ( +, -, \*, /, % )](#arithmetic-operators--------)
+      - [Compound assignment (+=, -=, \*=, /=, %=, \>\>=, \<\<=, \&=, ^=, |=)](#compound-assignment-----------)
 
 
 # C++ Language
@@ -69,7 +78,7 @@ In order to refer to the elements in the `std` namespace a program shall either 
 
 #### Identifiers
 
-A valid identifier is a sequence of one or more letters, digits, or underscore characters (`_`). In addition, identifiers shall always begin with a letter. They can also begin with an underline character (`_`), but such identifiers are -on most cases- considered reserved for compiler-specific keywords or external identifiers, as well as identifiers containing two successive underscore characters anywhere. In no case can they begin with a digit.
+A valid identifier is a sequence of one or more letters, digits, or underscore characters (`_`). In addition, identifiers shall always begin with a letter. They can also begin with an underline character (`_`), but such identifiers are **on most cases** considered reserved for compiler-specific keywords or external identifiers, as well as identifiers containing two successive underscore characters anywhere. In no case can they begin with a digit.
 
 #### Fundamental data types
 
@@ -89,3 +98,126 @@ If declaring more than one variable of the same type, they can all be declared i
 
 #### Initialization of variables
 
+In C++, there are three ways to initialize variables. They are all equivalent and are reminiscent of the evolution of the language over the years:
+
+- The first one, known as **c-like initialization** (because it is inherited from the C language), consists of appending an equal sign followed by the value to which the variable is initialized: `type identifier = initial_value;` For example: `int x = 0;`
+
+- A second method, known as **constructor initialization** (introduced by the C++ language), encloses the initial value between parentheses (()): `type identifier (initial_value);` For example: `int x (0);`
+
+- A third method, known as **uniform initialization**, similar to the above, but using curly braces ({}) instead of parentheses (this was introduced by the revision of the C++ standard, in 2011): `type identifier {initial_value};` For example: `int x {0};`
+
+#### Type deduction: auto and decltype
+
+When a new variable is initialized, the compiler can figure out what the type of the variable is automatically by the initializer. For this, it suffices to use `auto` as the type specifier for the variable:
+```
+int foo = 0;
+auto bar = foo;  // the same as: int bar = foo;
+```
+
+Variables that are not initialized can also make use of type deduction with the `decltype` specifier:
+
+```
+int foo = 0;
+decltype(foo) bar;  // the same as: int bar;
+```
+
+### Constants
+
+#### Literals
+
+Literal constants can be classified into: integer, floating-point, characters, strings, Boolean, pointers, and user-defined literals.
+
+- **Integer Numerals**
+These literal constants have a type, just like variables. By default, integer literals are of type `int`. However, certain suffixes may be appended to an integer literal to specify a different integer type:
+
+| Suffix | Type |
+| :---: | :---: |
+| `u` or `U` | `unsigned` |
+| `l` or `L` | `long` |
+| `ll` or `LL` | `long long` |
+
+Unsigned may be combined with any of the other two in any order to form `unsigned long` or `unsigned long long`. For example:
+
+```
+75         // int
+75u        // unsigned int
+75l        // long
+75ul       // unsigned long 
+75lu       // unsigned long
+```
+
+- **Floating Point Numerals**
+
+The default type for floating-point literals is `double`. Floating-point literals of type `float` or `long double` can be specified by adding one of the following suffixes:
+
+| Suffix | Type |
+| :---: | :---: |
+| `f` or `F` | `float` |
+| `l` or `L` | `long double` |
+
+- **Character and string literals**
+
+In C++, a backslash (`\`) at the end of line is considered a **line-continuation** character that merges both that line and the next into a single line. Therefore the following code:
+
+```
+x = "string expressed in \
+two lines"
+```
+
+is equivalent to:
+
+```x = "string expressed in two lines"```
+
+The character literals and string literals are made of characters of type `char` by default. A different character type can be specified by using one of the following prefixes:
+
+| Prefix | Character Type |
+| :---: | :---: |
+| `u` | `char16_t` |
+| `U` | `char32_t` |
+| `L` | `wchar_t` |
+
+For string literals, apart from the above `u`, `U`, and `L`, two additional prefixes exist:
+
+| Prefix | Description |
+| :---: | :---: |
+| `u8` | The string literal is encoded in the executable using UTF-8 |
+| `R` | The string literal is a raw string |
+
+- **Other literals**
+
+Three keyword literals exist in C++: `true`, `false` and `nullptr`.
+
+#### Typed constant expressions
+
+Sometimes, it is just convenient to give a name to a constant value: `const double pi = 3.1415926;`
+
+#### Preprocessor definitions (#define)
+
+Another mechanism to name constant values is the use of preprocessor definitions. They have the following form:
+`#define identifier replacement`
+This replacement is performed by the preprocessor, and happens before the program is compiled, thus causing a sort of blind replacement: the validity of the types or syntax involved is not checked in any way. For example:
+
+ ```
+ #define PI 3.14159
+ #define NEWLINE '\n'
+ ```
+
+Note that the `#define` lines are preprocessor directives, and as such are single-line instructions that *unlike C++ statements* do not require semicolons (`;`) at the end; the directive extends automatically until the end of the line. If a semicolon is included in the line, it is part of the replacement sequence and is also included in all replaced occurrences.
+
+### Operators
+
+#### Assignment Operator (=)
+
+The assignment operation always takes place from right to left.
+
+Assignment operations are expressions that can be evaluated. That means that the assignment itself has a value, and *for fundamental types* this value is the one assigned in the operation. For example:
+
+`y = 2 + (x = 5);    // x=5, y=7`
+
+The following expression is also valid in C++: `x = y = z = 5;`
+
+#### Arithmetic operators ( +, -, *, /, % )
+
+#### Compound assignment (+=, -=, *=, /=, %=, >>=, <<=, &=, ^=, |=)
+
+Compound assignment operators modify the current value of a variable by performing an operation on it. They are equivalent to assigning the result of an operation to the first operand:
