@@ -21,6 +21,43 @@
       - [Assignment Operator (=)](#assignment-operator-)
       - [Arithmetic operators ( +, -, \*, /, % )](#arithmetic-operators--------)
       - [Compound assignment (+=, -=, \*=, /=, %=, \>\>=, \<\<=, \&=, ^=, |=)](#compound-assignment-----------)
+      - [Increment and decrement (++, --)](#increment-and-decrement----)
+      - [Relational and comparison operators (==, !=, \>, \<, \>=, \<=)](#relational-and-comparison-operators------)
+      - [Logical operators (!, \&\&, ||)](#logical-operators---)
+      - [Conditional ternary operator (?)](#conditional-ternary-operator-)
+      - [Comma operator (,)](#comma-operator-)
+      - [Bitwise operators (\&, |, ^, ~, \<\<, \>\>)](#bitwise-operators------)
+      - [Explicit type casting operator](#explicit-type-casting-operator)
+      - [sizeof](#sizeof)
+    - [Basic Input/Output](#basic-inputoutput)
+      - [Standard output (cout)](#standard-output-cout)
+      - [Standard input (cin)](#standard-input-cin)
+      - [cin and strings](#cin-and-strings)
+      - [stringstream](#stringstream)
+  - [Program structure](#program-structure)
+    - [Statements and flow control](#statements-and-flow-control)
+    - [Functions](#functions)
+    - [Overloads and templates](#overloads-and-templates)
+    - [Name visibility](#name-visibility)
+  - [Compound data types](#compound-data-types)
+    - [Arrays](#arrays)
+    - [Character sequences](#character-sequences)
+    - [Pointers](#pointers)
+    - [Dynamic memory](#dynamic-memory)
+    - [Data structures](#data-structures)
+    - [Other data types](#other-data-types)
+  - [Classes](#classes)
+    - [Classes (I)](#classes-i)
+    - [Classes (II)](#classes-ii)
+    - [Special members](#special-members)
+    - [Friendship and inheritance](#friendship-and-inheritance)
+    - [Polymorphism](#polymorphism)
+  - [Other language features](#other-language-features)
+    - [Type conversions](#type-conversions)
+    - [Exceptions](#exceptions)
+    - [Preprocessor directives](#preprocessor-directives)
+  - [Standard library](#standard-library)
+    - [Input/output with files](#inputoutput-with-files)
 
 
 # C++ Language
@@ -221,3 +258,219 @@ The following expression is also valid in C++: `x = y = z = 5;`
 #### Compound assignment (+=, -=, *=, /=, %=, >>=, <<=, &=, ^=, |=)
 
 Compound assignment operators modify the current value of a variable by performing an operation on it. They are equivalent to assigning the result of an operation to the first operand:
+
+| expression | equivalent to... |
+| :---: | :---: |
+| `y += x` | `y = y + x` |
+| `y /= x` | `y = y / x` |
+| `y %= x` | `y = y % x` |
+
+`>>`, `<<`, `&`, `^` and `|` are bitwise operators.
+
+#### Increment and decrement (++, --)
+
+Although in simple expressions like `x++` or `++x`, both have exactly the same meaning; in other expressions in which the result of the increment or decrement operation is evaluated, they may have an important difference in their meaning.
+
+| Example 1 | Example 2 |
+| :---: | :---: |
+| `x = 3;` | `x = 3` |
+| `y = ++x;` | `y = x++` |
+| `// x contains 4, y contains 4` | `// x contains 4, y contains 3` |
+
+#### Relational and comparison operators (==, !=, >, <, >=, <=)
+
+#### Logical operators (!, &&, ||)
+
+C++ supports **short-circuit evaluation**, and works like this for these operators:
+
+| operator | short-circuit |
+| :---: | :---: |
+| `&&` | if the left-hand side expression is `false`, the combined result is `false` (the right-hand side expression is never evaluated). |
+| `||` | if the left-hand side expression is `true`, the combined result is `true` (the right-hand side expression is never evaluated). |
+
+This is mostly important when the right-hand expression has side effects, such as altering values:
+
+`if ( (i<10) && (++i<n) ) { /*...*/ }   // note that the condition increments i `
+
+#### Conditional ternary operator (?)
+
+The conditional operator evaluates an expression, returning one value if that expression evaluates to `true`, and a different one if the expression evaluates as `false`. Its syntax is:
+
+`condition ? result1 : result2`
+
+If `condition` is `true`, the entire expression evaluates to `result1`, and otherwise to `result2`.
+
+#### Comma operator (,)
+
+The comma operator (`,`) is used to separate two or more expressions that are included where only one expression is expected. When the set of expressions has to be evaluated for a value, only the right-most expression is considered. For example:
+
+`a = (b=3, b+2);    \\ a contains 5, b contains 3`
+
+#### Bitwise operators (&, |, ^, ~, <<, >>)
+
+Bitwise operators modify variables considering the bit patterns that represent the values they store.
+
+| operator | asm equivalent | description |
+| :---: | :---: | :---: |
+| `&` | `AND` | Bitwise AND |
+| `|` | `OR` | Bitwise inclusive OR |
+| `^` | `XOR` | Bitwise exclusive OR |
+| `~` | `NOT` | Unary complement (bit inversion) |
+| `<<` | `SHL` | Shift bits left |
+| `>>` | `SHR` | Shift bits right |
+
+#### Explicit type casting operator
+
+Type casting operators allow to convert a value of a given type to another type. There are several ways to do this in C++:
+
+ ```
+int a = 1;
+float b = 3.14;
+i = (int) f;    // inherite from the C language
+i = int (f);    // C++ style
+ ```
+
+#### sizeof
+
+This operator accepts one parameter, which can be either a type or a variable, and returns the size in bytes of that type or object:
+
+`x = sizeof (char);    // x contains 1`
+
+The value returned by `sizeof` is a compile-time constant, so it is always determined before program execution. For example:
+
+ ```
+int a = 7;
+cout<<sizeof(++a)<<endl;    // 4
+cout<<a<<endl;    // 7, ++a is not executed
+ ```
+
+ ### Basic Input/Output
+
+ The standard library defines a handful of stream objects that can be used to access what are considered the standard sources and destinations of characters by the environment where the program runs:
+
+ | stream | description |
+| :---: | :---: |
+| `cin` | standard input stream |
+| `cout` | standard output stream |
+| `cerr` | standard error (output) stream |
+| `clog` | standard logging (output) stream |
+
+#### Standard output (cout)
+
+For formatted output operations, `cout` is used together with the **insertion operator**, which is written as `<<` (i.e., two "less than" signs).
+
+ ```
+cout << "Output sentence"; // prints Output sentence on screen
+cout << 120;               // prints number 120 on screen
+cout << x;                 // prints the value of x on screen
+ ```
+
+The `endl` manipulator produces a newline character, exactly as the insertion of `\n` does; but it also has an additional behavior: the stream's buffer (if any) is flushed, which means that the output is requested to be physically written to the device, if it wasn't already. This affects mainly **fully buffered** streams, and `cout` is (generally) not a fully buffered stream. Still, it is generally a good idea to use `endl` only when flushing the stream would be a feature and `\n` when it would not. Bear in mind that a flushing operation incurs a certain overhead, and on some devices it may produce a delay.
+
+#### Standard input (cin)
+
+For formatted input operations, `cin` is used together with the extraction operator, which is written as `>>` (i.e., two "greater than" signs). This operator is then followed by the variable where the extracted data is stored. For example:
+
+ ```
+int age;
+cin >> age;
+ ```
+
+#### cin and strings
+
+`cin` extraction always considers spaces (whitespaces, tabs, new-line...) as terminating the value being extracted, and thus extracting a string means to always extract a single word, not a phrase or an entire sentence. For example:
+
+ ```
+string mystring;
+cin>>mystring;    // Hello World
+cout<<mystring;    // Hello
+ ```
+
+To get an entire line from `cin`, there exists a function, called `getline`, that takes the stream (`cin`) as first argument, and the string variable as second. For example:
+
+ ```
+string mystring;
+getline(cin, mystring);    // Hello World
+cout<<mystring;    // Hello World
+ ```
+
+#### stringstream
+
+The standard header `<sstream>` defines a type called `stringstream` that allows a string to be treated as a stream, and thus allowing extraction or insertion operations from/to strings in the same way as they are performed on `cin` and `cout`. This feature is most useful to convert strings to numerical values and vice versa. For example:
+
+ ```
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+int main ()
+{
+  string mystr;
+  float price=0;
+  int quantity=0;
+
+  cout << "Enter price: ";
+  getline (cin,mystr);
+  stringstream(mystr) >> price;
+  cout << "Enter quantity: ";
+  getline (cin,mystr);
+  stringstream(mystr) >> quantity;
+  cout << "Total price: " << price*quantity << endl;
+  return 0;
+}
+ ```
+
+
+
+
+
+
+
+## Program structure
+
+### Statements and flow control
+
+### Functions
+
+### Overloads and templates
+
+### Name visibility
+
+## Compound data types
+
+### Arrays
+
+### Character sequences
+
+### Pointers
+
+### Dynamic memory
+
+### Data structures
+
+### Other data types
+
+## Classes
+
+### Classes (I)
+
+### Classes (II)
+
+### Special members
+
+### Friendship and inheritance
+
+### Polymorphism
+
+## Other language features
+
+### Type conversions
+
+### Exceptions
+
+### Preprocessor directives
+
+## Standard library
+
+### Input/output with files
