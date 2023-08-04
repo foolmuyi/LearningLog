@@ -1,3 +1,15 @@
+- [Socket Programming in Python](#socket-programming-in-python)
+  - [Socket API Overview](#socket-api-overview)
+  - [TCP Sockets](#tcp-sockets)
+  - [Echo Client and Server](#echo-client-and-server)
+    - [Echo Server](#echo-server)
+    - [Echo Client](#echo-client)
+    - [Viewing Socket State](#viewing-socket-state)
+  - [Communication Breakdown](#communication-breakdown)
+  - [Handling Multiple Connections](#handling-multiple-connections)
+  - [Multi-Connection Client and Server](#multi-connection-client-and-server)
+    - [Multi-Connection Server](#multi-connection-server)
+
 # Socket Programming in Python
 
 ## Socket API Overview
@@ -21,19 +33,23 @@ socket类型：`socket.SOCK_STREAM` (TCP)，`socket.SOCK_DGRAM` (UDP)。
 
 ### Echo Server
 完整代码见 [echo-server.py](scripts/echo-server.py)，下面仅对部分代码加以解释。
+
 ```Python
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 ```
+
 `socket`对象支持`with`语句，从而可以不用在最后手动调用`s.close()`来关闭socket。`socket.socket()`中的两个参数分别表示地址族和socket类型，`socket.AF_INET`表示TCP/IP-IPv4，`socket.SOCK_STREAM`表示TCP连接。类似地，TCP/IP-IPv6是`socket.AF_INET6`，UDP是`socket.SOCK_DGRAM`。
 
 ```Python
 s.bind((HOST, PORT))
 ```
+
 因为之前指定了`socket.AF_INET`，因此此处`bind`函数的参数为`(HOST, PORT)`的形式，其中`HOST`既可以是域名字符串也可以是IPv4格式的IP地址。但需要注意的是，如果`HOST`使用域名字符串，会由于每次DNS解析结果的不同，导致每次实际连接的IP不同。
 
 ```Python
 conn, addr = s.accept()
 ```
+
 `.accept()`方法将会阻塞程序等待客户端连接，当有客户端连接时，此方法将返回一个新的socket对象`conn`和一个包含客户端地址信息的元组`addr`。注意，这里的`conn`是一个由`.accept`返回用来和客户端通信的新的socket对象，和`s.listen()`中的`s`不是一回事。至于`addr`，对于IPv4连接是`(host, port)`格式，对于IPv6连接是`(host, port, flowinfo, scopeid)`格式。
 
 ### Echo Client
@@ -41,6 +57,7 @@ conn, addr = s.accept()
 
 ### Viewing Socket State
 通过`netstat`命令可以看到socket的状态，比如在Linux系统运行echo-server后通过`netstat`可以得到如下图所示输出：
+
 ```Shell
 $ netstat -an | grep 65432
 Proto Recv-Q Send-Q Local Address      Foreign Address    State
@@ -48,6 +65,7 @@ tcp        0      0 127.0.0.1:65432    0.0.0.0:*          LISTEN
 ```
 
 在运行echo-client时，常见的一个报错信息是：
+
 ```Shell
 $ python echo-client.py 
 Traceback (most recent call last):
@@ -55,6 +73,7 @@ Traceback (most recent call last):
     s.connect((HOST, PORT))
 ConnectionRefusedError: [Errno 61] Connection refused
 ```
+
 这可能是因为echo-client的端口设置错误，或者echo-server未启动，或者连接被防火墙阻止。
 
 ## Communication Breakdown
@@ -76,3 +95,35 @@ ConnectionRefusedError: [Errno 61] Connection refused
 
 ### Multi-Connection Server
 
+完整代码见 [multiconn-server.py](scripts/multiconn-server.py)，下面将按照先主要代码，再函数定义的顺序对部分代码进行解释。
+
+```Python
+lsock.setblocking(False)
+sel.register(lsock, selectors.EVENT_READ, data=None)
+```
+
+与前面的echo server不同的是，在`.listen`之后调用了`.setblocking`来将`lsock`这个socket设为非阻塞模式。`sel.register()`将`lsock`注册为一个被`sel.select()`监控的socket。
+
+```Python
+while True:
+    events = sel.select(timeout=None)
+    for key, mask in events:
+        if key.data is None:
+            accept_wrapper(key.fileobj)
+        else:
+            service_connection(key, mask)
+```
+
+在这个event loop中，`sel.select()`阻塞等待，直到有socket准备好进行I/O操作，其返回值`events`是一个由tuple组成的列表，每一个tuple表示一个socket，包含`key`和`mask`。`key`是一个`SelectorKey namedtuple`，`key.fileobj`是一个socket对象。`mask`是一个event，即`selectors.EVENT_READ`或`selectors.EVENT_WRITE`。如果`key.data`为`None`，说明是一个监听到的新连接，通过`accept_wrapper()`函数接受该连接并注册到selector；如果`key.data`不为`None`，说明是一个已经接受的客户端socket，则通过`service_connection()`函数提供服务。
+
+```Python
+def accept_wrapper(sock):
+    conn, addr = sock.accept()
+    print(f"Accepted connection from {addr}")
+    conn.setblocking(False)
+    data = types.SimpleNamespace(addr=addr, inb=b"", outb=b"")
+    events = selectors.EVENT_READ | selectors.EVENT_WRITE
+    sel.register(conn, events, data=data)
+```
+
+在`accept_wrapper()`函数中，首先接受连接，然后同样将其设为非阻塞（*non-blocking*）模式，这一点非常重要，否则整个服务端都会被阻塞。

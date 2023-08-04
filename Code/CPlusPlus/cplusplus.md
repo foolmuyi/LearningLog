@@ -90,17 +90,23 @@ If you happen to have a Linux or Mac environment with development features, you 
 `// my first program in C++`
 Two slash signs (`//`) indicate that the rest of the line is a comment.
 
-`#include <iostream>`
+```C++
+#include <iostream>
+```
+
 Lines beginning with a hash sign (`#`) are directives read and interpreted by what is known as the preprocessor. They are special lines interpreted before the compilation of the program itself begins.
 
-`int main ()`
+```C++
+int main ()
+```
+
 The function named main is a special function in all C++ programs; it is the function called when the program is run. The execution of all C++ programs begins with the main function, regardless of where the function is actually located within the code.
 
 #### Comments
 
 C++ supports two ways of commenting code:
 
-```
+```C++
 // line comment
 /* block comment */
 ```
@@ -109,7 +115,9 @@ C++ supports two ways of commenting code:
 
 In order to refer to the elements in the `std` namespace a program shall either qualify each and every use of elements of the library (as we have done by prefixing `cout` with `std::`), or introduce visibility of its components. The most typical way to introduce visibility of these components is by means of **using declarations**:
 
-`using namespace std;`
+```C++
+using namespace std;
+```
 
 ### Variables and types
 
@@ -204,7 +212,9 @@ two lines"
 
 is equivalent to:
 
-```x = "string expressed in two lines"```
+```C++
+x = "string expressed in two lines"
+```
 
 The character literals and string literals are made of characters of type `char` by default. A different character type can be specified by using one of the following prefixes:
 
@@ -227,12 +237,20 @@ Three keyword literals exist in C++: `true`, `false` and `nullptr`.
 
 #### Typed constant expressions
 
-Sometimes, it is just convenient to give a name to a constant value: `const double pi = 3.1415926;`
+Sometimes, it is just convenient to give a name to a constant value: 
+
+```C++
+const double pi = 3.1415926;
+```
 
 #### Preprocessor definitions (#define)
 
 Another mechanism to name constant values is the use of preprocessor definitions. They have the following form:
-`#define identifier replacement`
+
+```C++
+#define identifier replacement
+```
+
 This replacement is performed by the preprocessor, and happens before the program is compiled, thus causing a sort of blind replacement: the validity of the types or syntax involved is not checked in any way. For example:
 
  ```C++
@@ -250,7 +268,9 @@ The assignment operation always takes place from right to left.
 
 Assignment operations are expressions that can be evaluated. That means that the assignment itself has a value, and *for fundamental types* this value is the one assigned in the operation. For example:
 
-`y = 2 + (x = 5);    // x=5, y=7`
+```C++
+y = 2 + (x = 5);    // x=5, y=7
+```
 
 The following expression is also valid in C++: `x = y = z = 5;`
 
@@ -291,13 +311,17 @@ C++ supports **short-circuit evaluation**, and works like this for these operato
 
 This is mostly important when the right-hand expression has side effects, such as altering values:
 
-`if ( (i<10) && (++i<n) ) { /*...*/ }   // note that the condition increments i `
+```C++
+if ( (i<10) && (++i<n) ) { /*...*/ }   // note that the condition increments i
+```
 
 #### Conditional ternary operator (?)
 
 The conditional operator evaluates an expression, returning one value if that expression evaluates to `true`, and a different one if the expression evaluates as `false`. Its syntax is:
 
-`condition ? result1 : result2`
+```C++
+condition ? result1 : result2
+```
 
 If `condition` is `true`, the entire expression evaluates to `result1`, and otherwise to `result2`.
 
@@ -305,7 +329,9 @@ If `condition` is `true`, the entire expression evaluates to `result1`, and othe
 
 The comma operator (`,`) is used to separate two or more expressions that are included where only one expression is expected. When the set of expressions has to be evaluated for a value, only the right-most expression is considered. For example:
 
-`a = (b=3, b+2);    \\ a contains 5, b contains 3`
+```C++
+a = (b=3, b+2);    \\ a contains 5, b contains 3
+```
 
 #### Bitwise operators (&, |, ^, ~, <<, >>)
 
@@ -335,7 +361,9 @@ i = int (f);    // C++ style
 
 This operator accepts one parameter, which can be either a type or a variable, and returns the size in bytes of that type or object:
 
-`x = sizeof (char);    // x contains 1`
+```C++
+x = sizeof (char);    // x contains 1
+```
 
 The value returned by `sizeof` is a compile-time constant, so it is always determined before program execution. For example:
 
@@ -399,7 +427,7 @@ cout<<mystring;    // Hello World
 
 The standard header `<sstream>` defines a type called `stringstream` that allows a string to be treated as a stream, and thus allowing extraction or insertion operations from/to strings in the same way as they are performed on `cin` and `cout`. This feature is most useful to convert strings to numerical values and vice versa. For example:
 
- ```C++
+```C++
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -420,7 +448,7 @@ int main ()
   cout << "Total price: " << price*quantity << endl;
   return 0;
 }
- ```
+```
 
 
 
