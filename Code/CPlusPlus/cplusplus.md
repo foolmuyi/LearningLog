@@ -146,14 +146,15 @@ In C++, there are three ways to initialize variables. They are all equivalent an
 #### Type deduction: auto and decltype
 
 When a new variable is initialized, the compiler can figure out what the type of the variable is automatically by the initializer. For this, it suffices to use `auto` as the type specifier for the variable:
-```
+
+```C++
 int foo = 0;
 auto bar = foo;  // the same as: int bar = foo;
 ```
 
 Variables that are not initialized can also make use of type deduction with the `decltype` specifier:
 
-```
+```C++
 int foo = 0;
 decltype(foo) bar;  // the same as: int bar;
 ```
@@ -175,7 +176,7 @@ These literal constants have a type, just like variables. By default, integer li
 
 Unsigned may be combined with any of the other two in any order to form `unsigned long` or `unsigned long long`. For example:
 
-```
+```C++
 75         // int
 75u        // unsigned int
 75l        // long
@@ -196,7 +197,7 @@ The default type for floating-point literals is `double`. Floating-point literal
 
 In C++, a backslash (`\`) at the end of line is considered a **line-continuation** character that merges both that line and the next into a single line. Therefore the following code:
 
-```
+```C++
 x = "string expressed in \
 two lines"
 ```
@@ -234,7 +235,7 @@ Another mechanism to name constant values is the use of preprocessor definitions
 `#define identifier replacement`
 This replacement is performed by the preprocessor, and happens before the program is compiled, thus causing a sort of blind replacement: the validity of the types or syntax involved is not checked in any way. For example:
 
- ```
+ ```C++
  #define PI 3.14159
  #define NEWLINE '\n'
  ```
@@ -323,7 +324,7 @@ Bitwise operators modify variables considering the bit patterns that represent t
 
 Type casting operators allow to convert a value of a given type to another type. There are several ways to do this in C++:
 
- ```
+ ```C++
 int a = 1;
 float b = 3.14;
 i = (int) f;    // inherite from the C language
@@ -338,7 +339,7 @@ This operator accepts one parameter, which can be either a type or a variable, a
 
 The value returned by `sizeof` is a compile-time constant, so it is always determined before program execution. For example:
 
- ```
+ ```C++
 int a = 7;
 cout<<sizeof(++a)<<endl;    // 4
 cout<<a<<endl;    // 7, ++a is not executed
@@ -359,7 +360,7 @@ cout<<a<<endl;    // 7, ++a is not executed
 
 For formatted output operations, `cout` is used together with the **insertion operator**, which is written as `<<` (i.e., two "less than" signs).
 
- ```
+ ```C++
 cout << "Output sentence"; // prints Output sentence on screen
 cout << 120;               // prints number 120 on screen
 cout << x;                 // prints the value of x on screen
@@ -371,7 +372,7 @@ The `endl` manipulator produces a newline character, exactly as the insertion of
 
 For formatted input operations, `cin` is used together with the extraction operator, which is written as `>>` (i.e., two "greater than" signs). This operator is then followed by the variable where the extracted data is stored. For example:
 
- ```
+ ```C++
 int age;
 cin >> age;
  ```
@@ -380,7 +381,7 @@ cin >> age;
 
 `cin` extraction always considers spaces (whitespaces, tabs, new-line...) as terminating the value being extracted, and thus extracting a string means to always extract a single word, not a phrase or an entire sentence. For example:
 
- ```
+ ```C++
 string mystring;
 cin>>mystring;    // Hello World
 cout<<mystring;    // Hello
@@ -388,7 +389,7 @@ cout<<mystring;    // Hello
 
 To get an entire line from `cin`, there exists a function, called `getline`, that takes the stream (`cin`) as first argument, and the string variable as second. For example:
 
- ```
+ ```C++
 string mystring;
 getline(cin, mystring);    // Hello World
 cout<<mystring;    // Hello World
@@ -398,7 +399,7 @@ cout<<mystring;    // Hello World
 
 The standard header `<sstream>` defines a type called `stringstream` that allows a string to be treated as a stream, and thus allowing extraction or insertion operations from/to strings in the same way as they are performed on `cin` and `cout`. This feature is most useful to convert strings to numerical values and vice versa. For example:
 
- ```
+ ```C++
 #include <iostream>
 #include <string>
 #include <sstream>
