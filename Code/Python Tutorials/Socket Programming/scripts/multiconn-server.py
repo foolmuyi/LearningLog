@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys
 import socket
 import selectors
@@ -22,12 +24,16 @@ def service_connection(key, mask):
         else:
             print(f"Closing connection to {data.addr}")
             sel.unregister(sock)
-            sel.close()
+            sock.close()
     if mask & selectors.EVENT_WRITE:
         if data.outb:
             print(f"Echoing {data.outb!r} to {data.addr}")
             sent = sock.send(data.outb)
             data.outb = data.outb[sent:]
+
+if len(sys.argv) != 3:
+    print(f"Usage: {sys.argv[0]} <host> <port>")
+    sys.exit(1)
 
 sel = selectors.DefaultSelector()
 host, port = sys.argv[1], int(sys.argv[2])

@@ -9,6 +9,9 @@
   - [Handling Multiple Connections](#handling-multiple-connections)
   - [Multi-Connection Client and Server](#multi-connection-client-and-server)
     - [Multi-Connection Server](#multi-connection-server)
+    - [Multi-Connection Client](#multi-connection-client)
+    - [Running the Multi-Connection Client and Server](#running-the-multi-connection-client-and-server)
+  - [Application Client and Server](#application-client-and-server)
 
 # Socket Programming in Python
 
@@ -126,4 +129,116 @@ def accept_wrapper(sock):
     sel.register(conn, events, data=data)
 ```
 
-在`accept_wrapper()`函数中，首先接受连接，然后同样将其设为非阻塞（*non-blocking*）模式，这一点非常重要，否则整个服务端都会被阻塞。
+在`accept_wrapper()`函数中，首先接受连接，然后同样将其设为非阻塞（*non-blocking*）模式，这一点非常重要，否则整个服务端都会被阻塞。然后同样使用`sel.register()`将其注册为一个受`sel.select()`监控的socket。这里我们把对方的IP地址作为了`data`，因此呼应了上文中“当`key.data`不为`None`时，说明是一个已经建立连接的socket”。
+
+```Python
+def service_connection(key, mask):
+    sock = key.fileobj
+    data = key.data
+    if mask & selectors.EVENT_READ:
+        recv_data = sock.recv(1024)
+        if recv_data:
+            data.outb += recv_data
+        else:
+            print(f"Closing connection to {data.addr}")
+            sel.unregister(sock)
+            sock.close()
+    if mask & selectors.EVENT_WRITE:
+        if data.outb:
+            print(f"Echoing {data.outb!r} to {data.addr}")
+            sent = sock.send(data.outb)
+            data.outb = data.outb[sent:]
+```
+
+`service_connection`的功能比较明确，即读取或写入数据，socket对象和数据都在`key`中，需要进行的操作在`mask`中。读取数据时，将读取到的数据存到`data.outb`中。如果没有收到数据，说明客户端已经关闭了socket连接，服务端也只需要用`sel.unregister()`将这个socket从`sel.select()`注销（即不再监控），然后关闭socket即可。写入数据时，作为一个echo server，这里是将收到的数据原样返回。不要忘了，这里的`sock.send()`返回的其实是发出的字节数。
+
+### Multi-Connection Client
+
+完整代码见 [multiconn-client.py](scripts/multiconn-client.py)，下面仅对部分代码进行说明。
+
+```Python
+def start_connection(host, port, num_conns):
+    server_addr = (host, port)
+    for i in range(0, num_conns):
+        connid = i + 1
+        print(f"Start connection {connid} to {server_addr}")
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setblocking(False)
+        sock.connect_ex(server_addr)
+        events = selectors.EVENT_READ | selectors.EVENT_WRITE
+        data = types.SimpleNamespace(connid=connid,
+                                     msg_total=sum(len(m) for m in messages),
+                                     recv_total=0,
+                                     messages=messages.copy(),
+                                     outb=b"")
+        sel.register(sock, events, data=data)
+```
+
+在multiconn-client中，我们定义了一个函数`start_connection()`来发起socket连接，`num_conns`为发起的连接数，运行时在命令行输入。另外需要注意的是，这里使用了`connect_ex()`而不是`connect()`，这是因为`connect`用在多线程中会触发`BlockingIOError`，使用`connect_ex()`则可以避免这一问题。
+
+```Python
+def service_connection(key, mask):
+    sock = key.fileobj
+    data = key.data
+    if mask & selectors.EVENT_READ:
+        recv_data = sock.recv(1024)
+        if recv_data:
+            print(f"Received {recv_data!r} from connection {data.connid}")
+            data.recv_total += len(recv_data)
+        if not recv_data or data.recv_total == data.msg_total:
+            print(f"Closing connection {data.connid}")
+            sel.unregister(sock)
+            sock.close()
+    if mask & selectors.EVENT_WRITE:
+        if not data.outb and data.messages:
+            data.outb = data.messages.pop(0)
+        if data.outb:
+            print(f"Sending {data.outb!r} to connection {data.connid}")
+            sent = sock.send(data.outb)
+            data.outb = data.outb[sent:]
+```
+
+客户端的`service_connection()`函数与服务端类似，主要的不同是客户端会统计收到的数据字节数，当收到的数据量与发出的相等时关闭socket连接，从而服务端也会关闭连接。实际情况中，服务端不会像这样一直等待客户端关闭连接，而是会设置一个超时时间，只要超过这一时间没有收到客户端的请求就关闭与客户端的连接。
+
+### Running the Multi-Connection Client and Server
+
+运行multiconn-server：
+
+```Shell
+$ python3 multiconn-server.py 127.0.0.1 54321
+Listening on ('127.0.0.1', 54321)
+Accepted connection from ('127.0.0.1', 42852)
+Accepted connection from ('127.0.0.1', 42856)
+Echoing b'Message 1 from client.Message 2 from client.' to ('127.0.0.1', 42852)
+Accepted connection from ('127.0.0.1', 42862)
+Echoing b'Message 1 from client.Message 2 from client.' to ('127.0.0.1', 42856)
+Closing connection to ('127.0.0.1', 42852)
+Echoing b'Message 1 from client.Message 2 from client.' to ('127.0.0.1', 42862)
+Closing connection to ('127.0.0.1', 42856)
+Closing connection to ('127.0.0.1', 42862)
+^C
+Caught keyboard interrupt, exiting.
+```
+
+运行multiconn-client：
+
+```Shell
+$ python3 multiconn-client.py 127.0.0.1 54321 3
+Start connection 1 to ('127.0.0.1', 54321)
+Start connection 2 to ('127.0.0.1', 54321)
+Start connection 3 to ('127.0.0.1', 54321)
+Sending b'Message 1 from client.' to connection 1
+Sending b'Message 1 from client.' to connection 2
+Sending b'Message 1 from client.' to connection 3
+Sending b'Message 2 from client.' to connection 1
+Sending b'Message 2 from client.' to connection 2
+Sending b'Message 2 from client.' to connection 3
+Received b'Message 1 from client.Message 2 from client.' from connection 1
+Closing connection 1
+Received b'Message 1 from client.Message 2 from client.' from connection 2
+Closing connection 2
+Received b'Message 1 from client.Message 2 from client.' from connection 3
+Closing connection 3
+```
+
+## Application Client and Server
