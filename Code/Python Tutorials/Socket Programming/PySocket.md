@@ -12,6 +12,8 @@
     - [Multi-Connection Client](#multi-connection-client)
     - [Running the Multi-Connection Client and Server](#running-the-multi-connection-client-and-server)
   - [Application Client and Server](#application-client-and-server)
+    - [Application Protocol Header](#application-protocol-header)
+    - [Sending an Application Message](#sending-an-application-message)
 
 # Socket Programming in Python
 
@@ -242,3 +244,24 @@ Closing connection 3
 ```
 
 ## Application Client and Server
+
+在上述多连接的socket基础上，我们将进一步完善错误处理等内容，以实现完善的socket通信。从Python 3.3开始，socket相关的报错的异常类型均为`OSError`或其子类。除了报错以外，还有一类常见的问题是超时，也需要进行处理。
+
+使用TCP socket发送和接收数据时，传递的都是原始字节，要将其转换为有效信息，就需要应用层协议来定义数据的格式。一种常见的方法是在要传递的有效信息前加上一段`header`，用来说明传递的信息的字节个数等，这样接收方就可以知道在header后再读取多少个字节并转换成有效信息。
+
+对于多字节的数据，还存在Byte Endianess，即字节顺序的问题，不同类型的CPU的字节顺序可能不同。大端（Big Endian）存储高位优先，内存的最低位地址存储数据的最高位；小端（Little Endian）存储低位优先，内存的最低位地址存储数据的最低位。为了避免这个麻烦的问题，我们可以在header中使用`Unicode`并采用`UTF-8`编码。
+
+### Application Protocol Header
+
+现在来定义一个header，这个header是一个使用JSON序列化的Python字典，UTF-8编码。内容如下：
+
+| 名称 | 描述 |
+| :---: | :---: |
+| `byteorder` | 本机的字节顺序（用`sys.byteorder`查看） |
+| `content-length` | 数据内容的字节个数 |
+| `content-type` | 数据内容的类型，比如`text/json`或`binary/my-binary-type` |
+| `content-encoding` | 数据内容的编码方式，比如Unicode文本的`utf-8`和二进制数据的`binary` |
+
+这样我们就定义了一个简单的header，数据接收方根据这个header就可以正确解码出收到的原始字节数据。由于header是一个字典，如果有必要，也完全可以在header中添加除了上述四条外更多的信息。
+
+### Sending an Application Message
