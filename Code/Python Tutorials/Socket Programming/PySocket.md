@@ -14,6 +14,8 @@
   - [Application Client and Server](#application-client-and-server)
     - [Application Protocol Header](#application-protocol-header)
     - [Sending an Application Message](#sending-an-application-message)
+    - [Application Message Class](#application-message-class)
+      - [Message Entry Point](#message-entry-point)
 
 # Socket Programming in Python
 
@@ -265,3 +267,73 @@ Closing connection 3
 这样我们就定义了一个简单的header，数据接收方根据这个header就可以正确解码出收到的原始字节数据。由于header是一个字典，如果有必要，也完全可以在header中添加除了上述四条外更多的信息。
 
 ### Sending an Application Message
+
+在上文中提到，header的长度是不定的，那么接收者在接收数据时如何知道接收多少个字节才是完整的header呢？为了解决这一问题，header前面会添加固定的两个字节来指明header的长度。因此一条完整的消息的格式是：两字节的header长度数据 + 长度不定的header + 在header中指明长度的消息内容，如图所示：
+
+![Message format](./imgs/message.png)
+
+### Application Message Class
+
+完整代码见 [app-client.py](scripts/app-client.py)，[app-server.py](scripts/app-server.py)，[libclient.py](scripts/libclient.py)，[libserver.py](scripts/libserver.py)。
+
+在接下来的例子中，客户端将发起一个搜索请求，服务端执行查找并返回匹配结果。如果客户端发起的不是搜索请求，服务端则将其视为二进制请求并返回二进制响应。本例中客户端和服务端的大部分代码都与之前的多连接例子`multiconn-client`和`multiconn-server`类似，不同的是将会使用一个名叫`Message`的类来构建传输的消息，以实现对header和消息内容的读、写、处理等。
+
+#### Message Entry Point
+
+每一个实例化的`Message`对象，都与一个被selector监听的socket连接相关联：
+
+```Python
+#app-server.py
+
+message = libserver.Message(sel, conn, addr)
+sel.register(conn, selectors.EVENT_READ, data=message)
+```
+
+`sel.select()`监听到有socket连接收到数据时，调用`Message`类的`.process_events()`方法对message进行处理：
+
+```Python
+# app-server.py
+
+events = sel.select(timeout=None)
+for key, mask in events:
+    if key.data is None:
+        accept_wrapper(key.fileobj)
+    else:
+        message = key.data
+        try:
+            message.process_events(mask)
+```
+
+`.process.events()`方法的内容如下：
+
+```Python
+# libserver.py
+
+def process_events(self, mask):
+    if mask & selectors.EVENT_READ:
+        self.read()
+    if mask & selectors.EVENT_WRITE:
+        self.write()
+```
+
+可以看到，`.process_events()`方法非常简单，只是选择执行读取还是写入操作。然后我们再来看一下`.read()`方法：
+
+```Python
+# libserver.py
+
+def read(self):
+    self._read()
+
+    if self._jsonheader_len is None:
+        self.process_protoheader()
+
+    if self._jsonheader_len is not None:
+        if self.jsonheader is None:
+            self.process_jsonheader()
+
+    if self.jsonheader:
+        if self.request is None:
+            self.process_request()
+```
+
+`.read()`方法首先调用`._read()`方法获取数据，然后按照上文所述的完整message的三个组成部分分别进行处理。
