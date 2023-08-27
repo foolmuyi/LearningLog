@@ -2,6 +2,8 @@
 
 ## 资源列表
 
+---
+
 ### DOING
 
 #### 价格行为技术分析：[价格行为技术分析 - Youtube](https://www.youtube.com/watch?v=ZDfeSgVc9Hs&list=PL7WPLNsdMyYeE84KVcxKJjtoxqKZnW2kb)
@@ -11,14 +13,15 @@
 
 #### cplusplus.com Tutorial: [C++ Language - cplusplus.com](https://cplusplus.com/doc/tutorial/)
 
+---
+
 ### TODO
 
 #### Control Bootcamp：[Control Bootcamp - Youtube](https://youtu.be/Pi7l8mMjYVE)
 
-#### C++ in 10 hours：[C++ for Beginners - Youtube](https://youtu.be/iBG0fN8lY8Y)
-
 #### Robotic Manipulation: [Robotci Manipulation - MIT](https://manipulation.csail.mit.edu/)
 
+---
 
 ### DONE
 

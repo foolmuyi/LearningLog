@@ -16,6 +16,8 @@
     - [Sending an Application Message](#sending-an-application-message)
     - [Application Message Class](#application-message-class)
       - [Message Entry Point](#message-entry-point)
+      - [Server Main Script](#server-main-script)
+      - [Server Message Class](#server-message-class)
 
 # Socket Programming in Python
 
@@ -337,3 +339,48 @@ def read(self):
 ```
 
 `.read()`方法首先调用`._read()`方法获取数据，然后按照上文所述的完整message的三个组成部分分别进行处理。
+再来看看`.write()`方法：
+
+```Python
+# libserver.py
+
+def write(self):
+    if self.request:
+        if not self.response_created:
+            self.create_response()
+
+    self._write()
+```
+
+`.write()`方法很简单，基本就是先调用`.create_response()`方法构造一个返回message，然后再调用`._write()`方法发送即可。
+客户端版本的`.write()`方法与服务端类似，不同的是客户端在发送完数据后会将selector设置为只监听读取事件，因为客户端此时只关心从服务端返回的结果。
+
+```Python
+# libclient.py
+
+def write(self):
+    if not self._request_queued:
+        self.queue_request()
+
+    self._write()
+
+    if self._request_queued:
+        if not self._send_buffer:
+            # Set selector to listen for read events, we're done writing.
+            self._set_selector_events_mask("r")
+```
+
+#### Server Main Script
+
+本节主要介绍 [app-server.py](scripts/app-server.py)的内容，与之前的`multiconn-server.py`重复的内容将不再赘述。首先的一个不同是多了一句`lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)`，其作用注释已经说明，是为了避免`OSError: [Errno 48] Address already in use`。另外，在实例化`Message`对象并将socket注册到selector时：
+
+```Python
+# app-server.py
+
+message = libserver.Message(sel, conn, addr)
+sel.register(conn, selectors.EVENT_READ, data=message)
+```
+
+这里将selector设置为了只监听读取事件，在收到客户端的请求后，再将其变为只监听写入事件。这是因为在大多数情况下，一个正常的socket连接总是可写入的(writable)，如果监听写入事件将会频繁触发`sel.select()`，浪费资源。
+
+#### Server Message Class
