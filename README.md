@@ -11,6 +11,12 @@
 #### Python Tutorials
 ##### Socket Programming：[Socket Programming in Python - realpython.com](https://realpython.com/python-sockets/)
 
+##### PyTest: [PyTest Documentation](https://docs.pytest.org/en/7.1.x/getting-started.html#)
+
+##### PyAutoGUI: [PyAutoGUI Documentation](https://pyautogui.readthedocs.io/en/latest/index.html)　　[PyAutoGUI Tutorial - Juejin](https://juejin.cn/post/7025195976994324493)
+
+##### Python Interview: [Python Interview](https://github.com/taizilongxu/interview_python)
+
 #### cplusplus.com Tutorial: [C++ Language - cplusplus.com](https://cplusplus.com/doc/tutorial/)
 
 ---
