@@ -9,13 +9,9 @@
 #### 价格行为技术分析：[价格行为技术分析 - Youtube](https://www.youtube.com/watch?v=ZDfeSgVc9Hs&list=PL7WPLNsdMyYeE84KVcxKJjtoxqKZnW2kb)
 
 #### Python Tutorials
-##### Socket Programming：[Socket Programming in Python - realpython.com](https://realpython.com/python-sockets/)
-
-##### PyTest: [PyTest Documentation](https://docs.pytest.org/en/7.1.x/getting-started.html#)
-
-##### PyAutoGUI: [PyAutoGUI Documentation](https://pyautogui.readthedocs.io/en/latest/index.html)　　[PyAutoGUI Tutorial - Juejin](https://juejin.cn/post/7025195976994324493)
-
-##### Python Interview: [Python Interview](https://github.com/taizilongxu/interview_python)
+- PyTest: [PyTest Documentation](https://docs.pytest.org/en/7.1.x/getting-started.html#)
+- PyAutoGUI: [PyAutoGUI Documentation](https://pyautogui.readthedocs.io/en/latest/index.html)　　[PyAutoGUI Tutorial - Juejin](https://juejin.cn/post/7025195976994324493)
+- Python Interview: [Python Interview](https://github.com/taizilongxu/interview_python)
 
 #### cplusplus.com Tutorial: [C++ Language - cplusplus.com](https://cplusplus.com/doc/tutorial/)
 
@@ -38,3 +34,7 @@
 #### Linux：[2021韩顺平 一周学会Linux - 哔哩哔哩](https://www.bilibili.com/video/BV1Sv411r7vd)
 
 #### MQL5: [MQL5编程入门教程 - 哔哩哔哩](https://space.bilibili.com/342693735/channel/collectiondetail?sid=857554)　　[MQL5文档 - mql5.com](https://www.mql5.com/zh/docs)
+
+#### Python:
+
+##### Socket Programming：[Socket Programming in Python - realpython.com](https://realpython.com/python-sockets/)

@@ -18,6 +18,10 @@
       - [Message Entry Point](#message-entry-point)
       - [Server Main Script](#server-main-script)
       - [Server Message Class](#server-message-class)
+      - [Client Main Script](#client-main-script)
+      - [Client Message Class](#client-message-class)
+      - [Message Class Wrapup](#message-class-wrapup)
+    - [Running the Application Client and Server](#running-the-application-client-and-server)
 
 # Socket Programming in Python
 
@@ -384,3 +388,280 @@ sel.register(conn, selectors.EVENT_READ, data=message)
 这里将selector设置为了只监听读取事件，在收到客户端的请求后，再将其变为只监听写入事件。这是因为在大多数情况下，一个正常的socket连接总是可写入的(writable)，如果监听写入事件将会频繁触发`sel.select()`，浪费资源。
 
 #### Server Message Class
+
+当服务端接收到至少两个字节时，便可以开始处理header中固定长度的部分（详见前文所述header的组成部分）：
+
+```Python
+# libserver.py
+
+def process_protoheader(self):
+    hdrlen = 2
+    if len(self._recv_buffer) >= hdrlen:
+        self._jsonheader_len = struct.unpack(
+            ">H", self._recv_buffer[:hdrlen]
+        )[0]
+        self._recv_buffer = self._recv_buffer[hdrlen:]
+```
+
+header的前两个字节包含了后续的不定长JSON header的长度信息，我们将其解码出来存在`self._jsonheader_len`中，然后将这两个已经解码的字节从接收缓存中删掉。类似地，当接收到JSON header长度地字节数时，便可以开始处理JSON header:
+
+```Python
+# libserver.py
+
+def process_jsonheader(self):
+    hdrlen = self._jsonheader_len
+    if len(self._recv_buffer) >= hdrlen:
+        self.jsonheader = self._json_decode(
+            self._recv_buffer[:hdrlen], "utf-8"
+        )
+        self._recv_buffer = self._recv_buffer[hdrlen:]
+        for reqhdr in (
+            "byteorder",
+            "content-length",
+            "content-type",
+            "content-encoding",
+        ):
+            if reqhdr not in self.jsonheader:
+                raise ValueError(f"Missing required header '{reqhdr}'.")
+```
+
+我们将JSON header解码转成一个字典存在`self.jsonheader`中，然后同样从接收缓存中去掉相应的字节数。最后便是真正的信息内容部分，其长度由JSON header中的`content-length`指定，当接收缓存接收到指定的字节数时，开始进行处理：
+
+```Python
+# libserver.py
+
+def process_request(self):
+    content_len = self.jsonheader["content-length"]
+    if not len(self._recv_buffer) >= content_len:
+        return
+    data = self._recv_buffer[:content_len]
+    self._recv_buffer = self._recv_buffer[content_len:]
+    if self.jsonheader["content-type"] == "text/json":
+        encoding = self.jsonheader["content-encoding"]
+        self.request = self._json_decode(data, encoding)
+        print(f"Received request {self.request!r} from {self.addr}")
+    else:
+        # Binary or unknown content-type
+        self.request = data
+        print(
+            f"Received {self.jsonheader['content-type']} "
+            f"request from {self.addr}"
+        )
+    # Set selector to listen for write events, we're done reading.
+    self._set_selector_events_mask("w")
+```
+
+首先我们将相应的字节从接收缓存中取出来赋给变量`data`，然后根据内容的类型（这里只分了`text/json`和其他两种）分别进行处理。最后将selector从只监听读取事件改为只监听写入事件，因为此时我们已经完成了对请求的读取。当socket为可写入状态时，我们开始创建对客户端的响应消息：
+
+```Python
+# libserver.py
+
+def create_response(self):
+    if self.jsonheader["content-type"] == "text/json":
+        response = self._create_response_json_content()
+    else:
+        # Binary or unknown content-type
+        response = self._create_response_binary_content()
+    message = self._create_message(**response)
+    self.response_created = True
+    self._send_buffer += message
+```
+
+这里我们根据收到的请求的消息类型调用不同的函数相应地创建了不同的相应信息，然后将flag变量`self.response_created`设为`True`并将创建好的响应信息加到发送缓存中，`._write`方法将负责发送响应消息并在发送完毕后关闭socket。至此，服务端的操作结束。
+
+```Python
+# libserver.py
+
+def _write(self):
+    if self._send_buffer:
+        print(f"Sending {self._send_buffer!r} to {self.addr}")
+        try:
+            # Should be ready to write
+            sent = self.sock.send(self._send_buffer)
+        except BlockingIOError:
+            # Resource temporarily unavailable (errno EWOULDBLOCK)
+            pass
+        else:
+            self._send_buffer = self._send_buffer[sent:]
+            # Close when the buffer is drained. The response has been sent.
+            if sent and not self._send_buffer:
+                self.close()
+```
+
+#### Client Main Script
+
+首先，客户端运行时需要同时给予必要的参数：
+
+```Shell
+$ python app-client.py
+Usage: app-client.py <host> <port> <action> <value>
+```
+
+然后`start_connection()`函数根据输入的参数发起socket连接：
+
+```Python
+# app-client.py
+
+def start_connection(host, port, request):
+    addr = (host, port)
+    print(f"Starting connection to {addr}")
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setblocking(False)
+    sock.connect_ex(addr)
+    events = selectors.EVENT_READ | selectors.EVENT_WRITE
+    message = libclient.Message(sel, sock, addr, request)
+    sel.register(sock, events, data=message)
+```
+
+此时我们将selector设为同时监听读取和写入，因为我们的请求还未发送，发送完请求后基于同样的原因将会和服务端一样将selector设为只监听读取。
+
+#### Client Message Class
+
+首先，客户端需要将请求内容加上header构成完整的请求消息：
+
+```Python
+# libclient.py
+
+def queue_request(self):
+    content = self.request["content"]
+    content_type = self.request["type"]
+    content_encoding = self.request["encoding"]
+    if content_type == "text/json":
+        req = {
+            "content_bytes": self._json_encode(content, content_encoding),
+            "content_type": content_type,
+            "content_encoding": content_encoding,
+        }
+    else:
+        req = {
+            "content_bytes": content,
+            "content_type": content_type,
+            "content_encoding": content_encoding,
+        }
+    message = self._create_message(**req)
+    self._send_buffer += message
+    self._request_queued = True
+```
+
+然后将flag变量`self._request_queued`设为`True`并将创建好的请求消息加到发送缓存中，`._write`方法将负责发送请求消息。接收和处理服务端返回的响应消息和上述服务端接收和处理客户端的请求消息非常类似，也是先处理两字节的固定长度header，然后处理JSON header，然后处理消息内容，不同的是在处理完响应消息后，不需要再发送任何东西，而是直接关闭socket，流程结束。
+
+#### Message Class Wrapup
+
+总结几个关于`Message`类需要注意的问题。首先，`Message`类如果出现报错都会被主程序中的`try except`语句捕获：
+
+```Python
+# app-client.py
+
+try:
+    while True:
+        events = sel.select(timeout=1)
+        for key, mask in events:
+            message = key.data
+            try:
+                message.process_events(mask)
+            except Exception:
+                print(
+                    f"Main: Error: Exception for {message.addr}:\n"
+                    f"{traceback.format_exc()}"
+                )
+                message.close()
+        # Check for a socket being monitored to continue.
+        if not sel.get_map():
+            break
+except KeyboardInterrupt:
+    print("Caught keyboard interrupt, exiting")
+finally:
+    sel.close()
+```
+
+尤其注意`message.close()`这一句，它保证了如果出现异常socket会被关闭并不再被selector监听。
+`._read()`和`._write()`方法中也有需要注意的地方：
+
+```Python
+# libclient.py
+
+def _read(self):
+    try:
+        # Should be ready to read
+        data = self.sock.recv(4096)
+    except BlockingIOError:
+        # Resource temporarily unavailable (errno EWOULDBLOCK)
+        pass
+    else:
+        if data:
+            self._recv_buffer += data
+        else:
+            raise RuntimeError("Peer closed.")
+```
+
+注意这里的`except BlockingIOError:`和下一句`pass`，这是因为`BlockingIOError`是一个暂时性的异常，不需要进行任何处理，等待即可。
+
+### Running the Application Client and Server
+
+首先启动服务端：
+
+```Shell
+$ python app-server.py '' 65432
+Listening on ('', 65432)
+```
+
+然后运行客户端：
+
+```Shell
+$ python app-client.py 10.0.1.1 65432 search morpheus
+Starting connection to ('10.0.1.1', 65432)
+Sending b'\x00d{"byteorder": "big", "content-type": "text/json", "content-encoding": "utf-8", "content-length": 41}{"action": "search", "value": "morpheus"}' to ('10.0.1.1', 65432)
+Received response {'result': 'Follow the white rabbit. 🐰'} from ('10.0.1.1', 65432)
+Got result: Follow the white rabbit. 🐰
+Closing connection to ('10.0.1.1', 65432)
+```
+
+再来一次：
+
+```Shell
+$ python app-client.py 10.0.1.1 65432 search 🐶
+Starting connection to ('10.0.1.1', 65432)
+Sending b'\x00d{"byteorder": "big", "content-type": "text/json", "content-encoding": "utf-8", "content-length": 37}{"action": "search", "value": "\xf0\x9f\x90\xb6"}' to ('10.0.1.1', 65432)
+Received response {'result': '🐾 Playing ball! 🏐'} from ('10.0.1.1', 65432)
+Got result: 🐾 Playing ball! 🏐
+Closing connection to ('10.0.1.1', 65432)
+```
+
+相应的服务端的输出为：
+
+```Shell
+Accepted connection from ('10.0.2.2', 55340)
+Received request {'action': 'search', 'value': 'morpheus'} from ('10.0.2.2', 55340)
+Sending b'\x00g{"byteorder": "little", "content-type": "text/json", "content-encoding": "utf-8", "content-length": 43}{"result": "Follow the white rabbit. \xf0\x9f\x90\xb0"}' to ('10.0.2.2', 55340)
+Closing connection to ('10.0.2.2', 55340)
+
+Accepted connection from ('10.0.2.2', 55338)
+Received request {'action': 'search', 'value': '🐶'} from ('10.0.2.2', 55338)
+Sending b'\x00g{"byteorder": "little", "content-type": "text/json", "content-encoding": "utf-8", "content-length": 37}{"result": "\xf0\x9f\x90\xbe Playing ball! \xf0\x9f\x8f\x90"}' to ('10.0.2.2', 55338)
+Closing connection to ('10.0.2.2', 55338)
+```
+
+当`action`不为`search`时，根据`libserver.py`中的处理方式，只会打印出`content-type`并将收到的前10个字节返回给客户端。
+
+客户端：
+
+```Shell
+$ python .\app-client.py 127.0.0.1 23333 test qwertyuiopa
+Starting connection to ('127.0.0.1', 23333) ...
+Sending b'\x00\x7f{"byteorder": "little", "content-type": "binary/custom-client-binary-type", "content-encoding": "binary", "content-length": 15}testqwertyuiopa' to ('127.0.0.1', 23333)
+
+Received binary/custom-server-binary-type response from ('127.0.0.1', 23333)
+Got response: b'First 10 bytes of request: testqwerty'
+Closing connection to ('127.0.0.1', 23333)
+```
+
+服务端：
+
+```Shell
+$ python app-server.py 127.0.0.1 23333
+Listening on ('127.0.0.1', 23333)
+Accepted connection from ('127.0.0.1', 51043)
+Received binary/custom-client-binary-type request from ('127.0.0.1', 51043)
+Sending b'\x00\x7f{"byteorder": "little", "content-type": "binary/custom-server-binary-type", "content-encoding": "binary", "content-length": 37}First 10 bytes of request: testqwerty' to ('127.0.0.1', 51043)
+Closing connection to ('127.0.0.1', 51043)
+```
