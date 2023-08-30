@@ -22,6 +22,10 @@
       - [Client Message Class](#client-message-class)
       - [Message Class Wrapup](#message-class-wrapup)
     - [Running the Application Client and Server](#running-the-application-client-and-server)
+  - [TroubleShooting](#troubleshooting)
+    - [`ping`](#ping)
+    - [`netstat`](#netstat)
+    - [Wireshark](#wireshark)
 
 # Socket Programming in Python
 
@@ -665,3 +669,17 @@ Received binary/custom-client-binary-type request from ('127.0.0.1', 51043)
 Sending b'\x00\x7f{"byteorder": "little", "content-type": "binary/custom-server-binary-type", "content-encoding": "binary", "content-length": 37}First 10 bytes of request: testqwerty' to ('127.0.0.1', 51043)
 Closing connection to ('127.0.0.1', 51043)
 ```
+
+## TroubleShooting
+
+### `ping`
+
+`ping`命令通过发送ICMP请求检查一个终端是否连接到网络。
+
+### `netstat`
+
+前文中我们已经提到过用`netstat`来查看网络状态，值得注意的是，其输出中的`Recv-Q`和`Send-Q`表示的是缓存中待接收和发送的字节数。如果这个值非常大，说明存在异常。可能是遇到了CPU瓶颈，或者程序有bug导致没有调用`socket.recv()`和`socket.send()`来处理数据，或者网络拥堵等等。当这个值大到一定程度，将会触发报错。
+
+### Wireshark
+
+Wireshark是一个强大的网络分析和抓包工具，GUI版本叫Wireshark，终端版本叫TShark。
