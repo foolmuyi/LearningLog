@@ -6,8 +6,6 @@
 
 ### DOING
 
-#### 价格行为技术分析：[价格行为技术分析 - Youtube](https://www.youtube.com/watch?v=ZDfeSgVc9Hs&list=PL7WPLNsdMyYeE84KVcxKJjtoxqKZnW2kb)
-
 #### Python Tutorials
 - PyTest: [PyTest Documentation](https://docs.pytest.org/en/7.1.x/getting-started.html#)
 - PyAutoGUI: [PyAutoGUI Documentation](https://pyautogui.readthedocs.io/en/latest/index.html)　　[PyAutoGUI Tutorial - Juejin](https://juejin.cn/post/7025195976994324493)
@@ -22,6 +20,8 @@
 #### Control Bootcamp：[Control Bootcamp - Youtube](https://youtu.be/Pi7l8mMjYVE)
 
 #### Robotic Manipulation: [Robotci Manipulation - MIT](https://manipulation.csail.mit.edu/)
+
+#### 价格行为技术分析：[价格行为技术分析 - Youtube](https://www.youtube.com/watch?v=ZDfeSgVc9Hs&list=PL7WPLNsdMyYeE84KVcxKJjtoxqKZnW2kb)
 
 ---
 
