@@ -36,6 +36,10 @@
       - [stringstream](#stringstream)
   - [Program structure](#program-structure)
     - [Statements and flow control](#statements-and-flow-control)
+      - [Selection statements: if and else](#selection-statements-if-and-else)
+      - [Iteration statements (loops)](#iteration-statements-loops)
+      - [Jump Statements](#jump-statements)
+      - [Another selection statement: switch](#another-selection-statement-switch)
     - [Functions](#functions)
     - [Overloads and templates](#overloads-and-templates)
     - [Name visibility](#name-visibility)
@@ -307,7 +311,7 @@ C++ supports **short-circuit evaluation**, and works like this for these operato
 | operator | short-circuit |
 | :---: | :---: |
 | `&&` | if the left-hand side expression is `false`, the combined result is `false` (the right-hand side expression is never evaluated). |
-| `||` | if the left-hand side expression is `true`, the combined result is `true` (the right-hand side expression is never evaluated). |
+| `\|\|` | if the left-hand side expression is `true`, the combined result is `true` (the right-hand side expression is never evaluated). |
 
 This is mostly important when the right-hand expression has side effects, such as altering values:
 
@@ -340,7 +344,7 @@ Bitwise operators modify variables considering the bit patterns that represent t
 | operator | asm equivalent | description |
 | :---: | :---: | :---: |
 | `&` | `AND` | Bitwise AND |
-| `|` | `OR` | Bitwise inclusive OR |
+| `\|` | `OR` | Bitwise inclusive OR |
 | `^` | `XOR` | Bitwise exclusive OR |
 | `~` | `NOT` | Unary complement (bit inversion) |
 | `<<` | `SHL` | Shift bits left |
@@ -450,15 +454,167 @@ int main ()
 }
 ```
 
-
-
-
-
-
-
 ## Program structure
 
 ### Statements and flow control
+
+Programs are not limited to a linear sequence of statements. During its process, a program may repeat segments of code, or take decisions and bifurcate. For that purpose, C++ provides flow control statements that serve to specify what has to be done by our program, when, and under which circumstances.
+
+#### Selection statements: if and else
+
+The `if` keyword is used to execute a statement or block, if, and only if, a condition is fulfilled. Its syntax is:
+
+`if (condition) statement`
+
+If you want to include more than a single statement to be executed when the condition is fulfilled, these statements shall be enclosed in braces (`{}`), forming a block:
+
+```C++
+if (x == 100)
+{
+   cout << "x is ";
+   cout << x;
+}
+```
+
+Selection statements with `if` can also specify what happens when the condition is not fulfilled, by using the `else` keyword to introduce an alternative statement. Its syntax is:
+
+`if (condition) statement1 else statement2`
+
+#### Iteration statements (loops)
+
+- **The while loop**
+
+The simplest kind of loop is the while-loop. Its syntax is:
+
+`while (expression) statement`
+
+- **The do-while loop**
+
+Its syntax is:
+
+`do statement while (condition);`
+
+It behaves like a while-loop, except that `condition` is evaluated after the execution of `statement` instead of before, guaranteeing at least one execution of `statement`, even if `condition` is never fulfilled.
+
+- **The for loop**
+
+The `for` loop is designed to iterate a number of times. Its syntax is:
+
+`for (initialization; condition; increase) statement;`
+
+The `initialization` and `increase` expression, are executed before the loop begins the first time, and after each iteration, respectively.
+
+The three fields in a for-loop are optional. They can be left empty, but in all cases the semicolon signs between them are required. For example, `for (;n<10;)` is a loop without `initialization` or `increase` (equivalent to a while-loop).
+
+Because each of the fields is executed in a particular time in the life cycle of a loop, it may be useful to execute more than a single expression as any of `initialization`, `condition`, or `statement`. For example, it would be possible for a for loop to handle two counter variables, initializing and increasing both:
+
+```C++
+for ( n=0, i=100 ; n!=i ; ++n, --i )
+{
+   // whatever here...
+}
+```
+
+This loop will execute 50 times if neither `n` or `i` are modified within the loop.
+
+- **Range-based for loop**
+
+The for-loop has another syntax, which is used exclusively with ranges:
+
+`for ( declaration : range ) statement;`
+
+This kind of `for` loop iterates over all the elements in `range`, where `declaration` declares some variable able to take the value of an element in this `range`. Ranges are sequences of elements, including arrays, containers, and any other type supporting the functions `begin` and `end`. An example of range-based for loop using strings:
+
+```C++
+string str {"Hello!"};
+for (char c : str)
+{
+  cout << "[" << c << "]";
+}
+cout << '\n';
+```
+
+Range based loops usually also make use of type deduction for the type of the elements with `auto`. Typically, the range-based loop above can also be written as:
+
+```C++
+for (auto c : str)
+  cout << "[" << c << "]";
+```
+
+#### Jump Statements
+
+- **The break statement**
+
+`break` leaves a loop, even if the condition for its end is not fulfilled.
+
+- **The continue statement**
+
+The `continue` statement causes the program to skip the rest of the loop in the current iteration, as if the end of the statement block had been reached, causing it to jump to the start of the following iteration.
+
+- **The goto statement**
+
+`goto` allows to make an absolute jump to another point in the program. This unconditional jump ignores nesting levels, and does not cause any automatic stack unwinding. Therefore, it is a feature to use with care, and preferably within the same block of statements, especially in the presence of local variables.
+
+The destination point is identified by a **label**, which is then used as an argument for the `goto` statement. A **label** is made of a valid identifier followed by a colon (`:`).
+
+```C++
+int main ()
+{
+  int n=10;
+mylabel:
+  cout << n << ", ";
+  n--;
+  if (n>0) goto mylabel;
+  cout << "liftoff!\n";
+}
+```
+
+#### Another selection statement: switch
+
+The purpose of `switch` statement is to check for a value among a number of possible constant expressions. Its most typical syntax is:
+
+```C++
+switch (expression)
+{
+  case constant1:
+     group-of-statements-1;
+     break;
+  case constant2:
+     group-of-statements-2;
+     break;
+  .
+  .
+  .
+  default:
+     default-group-of-statements
+}
+```
+
+If `break` is not included, all statements following the case (including those under any other labels) are also executed, until the end of the switch block or a jump statement (such as `break`) is reached. For example:
+
+```C++
+switch (x) {
+  case 1:
+  case 2:
+  case 3:
+    cout << "x is 1, 2 or 3";
+    break;
+  default:
+    cout << "x is not 1, 2 nor 3";
+  };
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Functions
 
