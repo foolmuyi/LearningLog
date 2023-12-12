@@ -47,9 +47,14 @@
     - [将新目标添加到路线图](#将新目标添加到路线图)
     - [提示和技巧](#提示和技巧-1)
 - [Robot Tips](#robot-tips)
-  - [ABB机器人](#abb机器人)
-- [后置处理器](#后置处理器)
+- [后处理程序](#后处理程序)
+  - [选择后处理程序](#选择后处理程序)
+  - [修改后处理程序](#修改后处理程序)
 - [RoboDK API](#robodk-api)
+  - [Python API](#python-api)
+    - [Python仿真](#python仿真)
+    - [Python离线编程](#python离线编程)
+    - [Python在线编程](#python在线编程)
 - [机器人驱动](#机器人驱动)
 - [Accuracy](#accuracy)
 
@@ -352,18 +357,65 @@ PRM算法包括两个环节，较慢的“构造环节”仅需要执行一次�
 
 # Robot Tips
 
-## ABB机器人
+本章主要介绍了RoboDK软件和主流品牌机器人之间进行程序传输、运行程序、设置TCP以及设置RoboDK驱动等操作的详细步骤，用到时查阅即可。
 
+- [ABB机器人](https://robodk.com.cn/doc/cn/Robots-ABB.html#ABB)
+- [Denso机器人](https://robodk.com.cn/doc/cn/Robots-Denso.html#Denso)
+- [Fanuc机器人](https://robodk.com.cn/doc/cn/Robots-Fanuc.html#Fanuc)
+- [KUKA机器人](https://robodk.com.cn/doc/cn/Robots-KUKA.html#KUKA)
+- [Motoman机器人](https://robodk.com.cn/doc/cn/Robots-Motoman.html#Motoman)
+- [UR机器人](https://robodk.com.cn/doc/cn/Robots-Universal-Robots.html#UR)
 
+# 后处理程序
 
+后处理程序主要负责将RoboDK程序转换为和不同的机器人控制器适配的程序。RoboDK已经提供了许多后处理程序，可以支持多种品牌的机器人控制器。除此之外，用户也可以自己编写新的后处理程序或者修改现有的后处理程序，所有的后处理程序文件都在`C:\RoboDK\Posts\`文件夹内。
 
+## 选择后处理程序
 
+1. 右键单击机器人或者某一段机器人程序；
+2. 点击“选择后处理程序”；
+3. 根据机器人控制器型号在弹出的列表中选择正确的后处理程序，然后点击OK。
 
+注意：后处理程序的选择是和机器人绑定的，改变一段机器人程序的后处理程序时，所有此机器人的机器人程序的后处理程序都会改变。
 
+## 修改后处理程序
 
-# 后置处理器
+选择“程序” → “添加/编辑后处理程序”，然后选择“添加新的后处理程序”以自定义新的后处理程序，或者选择一个现成的后处理程序进行修改。也可以直接在`C:\RoboDK\Posts\`文件夹新建Python文件或者修改已有的Python文件。
 
 # RoboDK API
+
+RoboDK API支持Python、C#和MATLAB。
+
+## Python API
+
+RoboDK Python API的详细文档见[RoboDK API for Python](https://robodk.com/doc/en/PythonAPI/index.html)。本节只是简单介绍。
+
+RoboDK的Python API主要涉及两个模块：
+- [robolink模块](https://robodk.com/doc/en/PythonAPI/robodk.html#robolink-py)：robolink模块建立了一个RoboDK与Python之间的接口，RoboDK项目设计树中的任何对象都可以通过robolink模块提供的方法进行检索和各种操作。
+- [robodk模块](https://robodk.com/doc/en/PythonAPI/robodk.html)：robodk模块类似于Python的一个机器人工具箱，提供了一些进行数学运算和机器人位姿变换相关的方法，尤其是适配了主流品牌机器人不同的位姿变换方法，便于实际使用。所有的后处理程序都依赖于这个模块。
+
+Python API相关的文件位于`C:\RoboDK\Python`路径。
+
+### Python仿真
+
+在前文关于机器人程序的章节已经提到过，我们可以在仿真中调用Python宏程序来实现更丰富的仿真效果，例如模拟喷涂应用中喷涂的范围。要创建Python宏程序，只需点击“程序” → “添加Python程序”或者直接点击工具栏的Python图标，然后右键单击设计树中新出现的Python程序，选择“编辑Python脚本”即可。这里我们并不会详细介绍Python宏程序的编写，相关内容请参阅[RoboDK API for Python](https://robodk.com/doc/en/PythonAPI/index.html)完整文档。值得一提的是，在`C:\RoboDK\Library\Macros`文件夹中，RoboDK已经提供了很多Python宏程序，可以用于学习参考或者直接使用。
+
+### Python离线编程
+
+Python脚本也可以通过后处理程序转换为适配多个品牌机器人控制器的离线运行机器人程序，只需在设计树中选中Python脚本，单击右键，然后选择“生成机器人程序”即可。
+
+### Python在线编程
+
+
+
+
+
+
+
+
+
+
+
 
 # 机器人驱动
 
