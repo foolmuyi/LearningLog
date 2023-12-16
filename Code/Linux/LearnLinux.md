@@ -433,121 +433,98 @@ fi
 
 ## case语句
 
-`case \$Var in\
-"Value1\")\
-some code\...\
-;;\
-"Value2")\
-some code\...\
-;;\
-\...\...\...\...\
-\*)\
-some code\...\
-;;\
-esac`
+```Shell
+case $Var in
+"Value1")
+some code...
+;;
+"Value2")
+some code...
+;;
+......
+*)
+some code...
+;;
+esac
+```
 
 ## for循环
 
-1\. 语法一\
-`for Var in Value1 Value2 Value3\...\
-do\
-some code\...\
-done`\
-2. 语法二(类似C++写法)\
-`for ((iniValue;condition;update))\
-do\
-some code\...\
-done`
+- 语法一
+```Shell
+for Var in Value1 Value2 Value3...
+do
+some code...
+done
+```
+- 语法二(类似C++写法)
+```Shell
+for ((iniValue;condition;update))
+do
+some code...
+done
+```
 
 ## while循环
-
-`while \[condition \]\
-do\
-some code\...\
-done`\
+```Shell
+while [ condition ]
+do
+some code...
+done
+```
 注意condition前后必须有空格
 
 ## read获取输入
 
-1.  基本语法：`read OPTION PARAM`
-
-2.  OPTION:
-
-    -p
-
-    :   指定读取输入时的提示信息
-
-    -t
-
-    :   指定读取输入时的等待时间，超过此时间则不再等待
-
-3.  PARAM：指定一个变量名，将读取值赋给此变量。
+- 基本语法：`read OPTION PARAM`
+- OPTION:
+`-p`：指定读取输入时的提示信息
+`-t`：指定读取输入时的等待时间，超过此时间则不再等待
+- PARAM：指定一个变量名，将读取值赋给此变量。
 
 ## 系统函数
 
-1.  `basename PATH SUFFIX` 获取文件名\
-    举例：basename /home/tom/test.txt --\> test.txt\
-    basename /home/tom/test.txt .txt --\> test
+- `basename PATH SUFFIX` 获取文件名
+举例：`basename /home/tom/test.txt` → `test.txt`
+    `basename /home/tom/test.txt .txt` → `test`
 
-2.  `dirname PATH` 返回文件路径最后一个/前面的部分\
-    举例：dirname /home/tom/test.txt --\> /home/tom
+- `dirname PATH` 返回文件路径最后一个/前面的部分
+举例：`dirname /home/tom/test.txt` → `/home/tom`
 
 ## 自定义函数
 
-`funcName()\
-some code\...\
-return int （这句也可以不写）\
-\
-`\
-调用函数：`funcName Param1 Param2\...`
+```Shell
+funcName(){
+some code...
+return int （这句也可以不写）
+}
+```
+调用函数：`funcName Param1 Param2...`
 
 # 日志管理
 
-1.  系统的日志文件主要放在/var/log目录。
+- 系统的日志文件主要放在`/var/log`目录。
+- 日志管理服务：`rsyslog`。 
+查询`rsyslog`是否启动：`systemctl status rsyslog`
+查询`rsyslog`自启动设置：`systemctl list-unit-files | grep rsyslog`
+- `rsyslog`服务的配置文件在`/etc/rsyslog.d/50-default.conf`，在该文件中可以设置需要记录的日志和该日志对应的日志文件，用户也可以仿照该形式自定义想要记录的日志。
+![日志管理1](imgs/log_conf.png)
+![日志管理2](imgs/log_conf_1.png)
+![日志管理3](imgs/log_conf_2.png)
 
-2.  日志管理服务：rsyslog。 查询rsyslog是否启动：`systemctl status
-    rsyslog`。 查询rsyslog自启动设置：`systemctl list-unit-files \|
-    grep rsyslog`
-
-3.  rsyslog服务的配置文件在/etc/rsyslog.d/50-default.conf，在该文件中可以设置需要
-    记录的日志和该日志对应的日志文件，用户也可以仿照该形式自定义想要记录的日志。\
-
-    ::: figure*
-    ![image](imgs/log_conf.png) ![image](imgs/log_conf_1.png)
-    ![image](imgs/log_conf_2.png)
-    :::
-
-4.  日志轮替：对于某一项日志，每隔一段时间或当日志文件达到指定大小时自动建
-    立新的日志文件，便于管理和查看。Linux中使用logrotate服务来自动实现这一功能，
-    其配置文件在/etc/logrotate.conf和/etc/logrotate.d/\*。
+- 日志轮替：对于某一项日志，每隔一段时间或当日志文件达到指定大小时自动建立新的日志文件，便于管理和查看。Linux中使用`logrotate`服务来自动实现这一功能，其配置文件在`/etc/logrotate.conf`和`/etc/logrotate.d/*`。
 
 # 备份与恢复
 
-1.  方式一：把需要备份的文件用tar命令打包，需要恢复的时候解压覆盖即可。
-
-2.  方式二：使用dump和restore命令。
-
-3.  dump命令语法：`dump \[options\]`，常用选项如下：
-
-    ![image](imgs/dump_opt.png)
-
-4.  restore命令语法：`restore \[mode\] -f filename`，总共有4 种模式。
-
-    -C
-
-    :   对比模式，将备份文件与已存在的文件进行对比；
-
-    -i
-
-    :   交互模式，在还原备份文件时询问用户；
-
-    -r
-
-    :   还原模式；
-
-    -t
-
-    :   查看模式，查看备份文件中有哪些文件。
+- 方式一：把需要备份的文件用`tar`命令打包，需要恢复的时候解压覆盖即可。
+- 方式二：使用`dump`和`restore`命令。
+`dump`命令语法：`dump [options]`，常用选项如下：
+![image](imgs/dump_opt.png)
+restore命令语法：`restore [mode] -f filename`，总共有4 种模式。
+`-C`：对比模式，将备份文件与已存在的文件进行对比；
+`-i`：交互模式，在还原备份文件时询问用户；
+`-r`：还原模式；
+`-t`：查看模式，查看备份文件中有哪些文件。
 
 # Linux可视化管理工具
 
