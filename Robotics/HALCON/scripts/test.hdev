@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>* read_image(Image, './images/lena.jpeg')</l>
+<l>* rgb1_to_gray (Image, GrayImage)</l>
+<l>* threshold(GrayImage, Gray2, 0, 128)</l>
+<l>* connection(Gray2, AllRegion)</l>
+<l>* select_shape(AllRegion, MyRegion, 'area', 'and', 50000, 100000)</l>
+<c></c>
+<l>read_image(Image, 'claudia')</l>
+<l>rgb1_to_gray (Image, GrayImage)</l>
+<l>threshold (GrayImage, Regions, 0, 70)</l>
+<l>connection (Regions, Connection)</l>
+<l>select_shape (Connection, SelectedRegions1, 'area', 'and', 5173.61, 50000)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>
