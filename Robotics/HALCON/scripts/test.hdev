@@ -3,17 +3,17 @@
 <procedure name="main">
 <interface/>
 <body>
-<l>* read_image(Image, './images/lena.jpeg')</l>
-<l>* rgb1_to_gray (Image, GrayImage)</l>
-<l>* threshold(GrayImage, Gray2, 0, 128)</l>
-<l>* connection(Gray2, AllRegion)</l>
-<l>* select_shape(AllRegion, MyRegion, 'area', 'and', 50000, 100000)</l>
-<c></c>
 <l>read_image(Image, 'claudia')</l>
-<l>rgb1_to_gray (Image, GrayImage)</l>
-<l>threshold (GrayImage, Regions, 0, 70)</l>
-<l>connection (Regions, Connection)</l>
-<l>select_shape (Connection, SelectedRegions1, 'area', 'and', 5173.61, 50000)</l>
+<l>* dev_open_window_fit_image(Image, 0, 0, -1, -1, ROIWindow)</l>
+<l>* dev_display(Image)</l>
+<l>* disp_message(ROIWindow,'Please draw a circle.', 'image', 0, 0, 'red', 'true')</l>
+<l>* draw_circle(ROIWindow, CenterY, CenterX, CenterR)</l>
+<l>* gen_circle (ROI_0, CenterY, CenterX, CenterR)</l>
+<l>* reduce_domain (Image, ROI_0,ImageReduced)</l>
+<l>* dev_clear_window()</l>
+<l>* dev_display(ImageReduced)</l>
+<c></c>
+<l>draw_rectangle1</l>
 </body>
 <docu id="main">
 <parameters/>

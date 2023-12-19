@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* 生成棋盘格</c>
+<c></c>
+<c>*设置棋盘大小和格子大小</c>
+<l>BoardSize := 140</l>
+<l>CheckerSize := 20</l>
+<c></c>
+<c>* 算法思路：白色的格子在棋盘格中坐标为(0,0)、(0,2)、(1,1)等，行列坐标之和一定是2的整数倍</c>
+<l>dev_clear_window()</l>
+<l>gen_image_const (Image, 'byte', BoardSize, BoardSize)</l>
+<l>for RowIndex := 0 to (BoardSize-1) by 1</l>
+<l>    for ColIndex := 0 to (BoardSize-1) by 1</l>
+<c>        * HALCON中整数除以整数结果只保留整数部分，相当于Python中的地板除</c>
+<l>        CheckerIndexSum := RowIndex/CheckerSize + ColIndex/CheckerSize</l>
+<l>        if (CheckerIndexSum % 2 == 0)</l>
+<l>            set_grayval(Image, RowIndex, ColIndex, 255)</l>
+<l>        endif</l>
+<l>    endfor</l>
+<l>endfor</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>
