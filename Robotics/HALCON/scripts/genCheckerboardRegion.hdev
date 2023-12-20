@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* 生成棋盘格（区域填充版），比逐个像素渲染速度快得多</c>
+<c></c>
+<l>BoardSize := 1080</l>
+<l>CheckSize := 100</l>
+<c></c>
+<l>dev_clear_window()</l>
+<l>gen_image_const (Image, 'byte', BoardSize, BoardSize)</l>
+<l>for RowStart :=0 to (BoardSize-1) by CheckSize</l>
+<l>    ColInit := ((RowStart/CheckSize)%2)*CheckSize</l>
+<l>    for ColStart := ColInit to (BoardSize-1) by (2*CheckSize)</l>
+<l>        RowEnd := min([RowStart+CheckSize, BoardSize-1])</l>
+<l>        ColEnd := min([ColStart+CheckSize, BoardSize-1])</l>
+<l>        gen_rectangle1(Checker, RowStart, ColStart, RowEnd, ColEnd)</l>
+<l>        overpaint_region(Image, Checker, 255, 'fill')</l>
+<l>    endfor</l>
+<l>endfor</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>

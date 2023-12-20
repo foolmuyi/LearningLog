@@ -3,7 +3,7 @@
 <procedure name="main">
 <interface/>
 <body>
-<c>* 生成棋盘格</c>
+<c>* 生成棋盘格（逐个像素计算）</c>
 <c></c>
 <c>*设置棋盘大小和格子大小</c>
 <l>BoardSize := 140</l>

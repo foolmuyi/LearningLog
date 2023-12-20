@@ -29,6 +29,7 @@
     - [图像窗口ROI工具](#图像窗口roi工具)
     - [代码设定ROI](#代码设定roi)
     - [交互式绘制ROI](#交互式绘制roi)
+  - [图像变换](#图像变换)
 
 
 
@@ -238,7 +239,7 @@ HALCON也支持continue和break语句，且用法和C++等语言相同，不再�
 
 ![ROI工具](./imgs/ROI.png)
 
-如上图所示，点击图形窗口中的ROI工具，在弹出的窗口中选择一种形状（矩形、圆、椭圆等等），然后通过鼠标左键绘制右键确认，即可得到一个ROI区域，最后点击插入代码即可。
+如上图所示，点击图形窗口中的ROI工具，在弹出的窗口中选择一种形状（矩形、圆、椭圆等等），然后通过鼠标左键绘制右键确认，即可得到一个ROI区域，最后点击插入代码即可。而且还可以绘制多个ROI区域并进行求合集、交集等集合操作。
 
 ### 代码设定ROI
 
@@ -264,4 +265,24 @@ dev_clear_window()    * 清除显示的图片
 dev_display(ImageReduced)    * 显示抠图结果
 ```
 
-在上面的程序中，我们使用了`draw_circle`来获取用户绘制的ROI，这也限定了用户只能绘制圆形的ROI。实际上HALCON还提供了多种类似的算子，例如`draw_rectangle1`、`draw_ellipse`等。
+在上面的程序中，我们使用了`draw_circle`来获取用户绘制的ROI，这也限定了用户只能绘制圆形的ROI。实际上HALCON还提供了多种类似的算子，例如`draw_rectangle1`、`draw_ellipse`，`draw_polygon`等。其中`draw_polygon`比较特殊，因为用户在绘制多边形时其实绘制的是一条折线，我们需要先将首尾连接起来形成一个闭合图形，再进行抠图，也就是不能用`gen_polygon`（实际上也没有这个算子）来生成多边形而需要用`shape_trans`，如下所示：
+
+```
+draw_polygon (ROI_polygon, ROIWindow)
+shape_trans(ROI_polygon, ROI_0, 'convex')
+reduce_domain (Image, ROI_0,ImageReduced)
+```
+
+注意结合上面的代码和下面的图片观察每个图像变量的区别：
+
+![多边形ROI](./imgs/polygon_ROI.png)
+
+## 图像变换
+
+关于图像变换的理论知识可以参考[机器视觉自动检测技术](../机器视觉自动检测技术/MachineVision.md)中的“图像变换”章节，本节只介绍HALCON中进行图像变换操作需要用到的算子。
+
+- `hom_mat2d_translate`：2维平移变换
+- `hom_mat2d_rotate`：2维旋转变换
+- `hom_mat2d_scale`：2维缩放变换
+- `hom_mat2d_identity`：生成一个2维齐次变换单位矩阵，即3×3单位阵
+- `affine_trans_image`：对图像进行2维仿射变换

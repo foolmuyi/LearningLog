@@ -3,17 +3,27 @@
 <procedure name="main">
 <interface/>
 <body>
-<l>read_image(Image, 'claudia')</l>
-<l>* dev_open_window_fit_image(Image, 0, 0, -1, -1, ROIWindow)</l>
-<l>* dev_display(Image)</l>
-<l>* disp_message(ROIWindow,'Please draw a circle.', 'image', 0, 0, 'red', 'true')</l>
-<l>* draw_circle(ROIWindow, CenterY, CenterX, CenterR)</l>
-<l>* gen_circle (ROI_0, CenterY, CenterX, CenterR)</l>
-<l>* reduce_domain (Image, ROI_0,ImageReduced)</l>
-<l>* dev_clear_window()</l>
-<l>* dev_display(ImageReduced)</l>
+<l>read_image(Image, './images/triangle.png')</l>
+<l>threshold(Image, Regions, 200, 255)</l>
+<l>area_center(Regions, AreaA, ARow, ACol)</l>
+<l>hom_mat2d_identity(Hom2dId)</l>
+<l>dev_clear_window()</l>
 <c></c>
-<l>draw_rectangle1</l>
+<c>* 平移</c>
+<l>hom_mat2d_translate(Hom2dId, ARow/2, ACol/2, Hom2dTrans)</l>
+<l>affine_trans_image(Image, ImageTrans, Hom2dTrans, 'constant', 'false')</l>
+<c></c>
+<c>* 绕原点旋转</c>
+<l>* hom_mat2d_rotate_local(Hom2dId, 0.3, Hom2dRotLocal)</l>
+<l>* affine_trans_image(Image, ImageRotLocal, Hom2dRotLocal, 'constant', 'true')</l>
+<c></c>
+<c>* 绕指定点旋转</c>
+<l>hom_mat2d_rotate(Hom2dId, 1.57, ARow, ACol, Hom2dRot)</l>
+<l>affine_trans_image(ImageTrans, ImageRot, Hom2dRot, 'constant', 'false')</l>
+<c></c>
+<c>* 缩放</c>
+<l>* hom_mat2d_scale_local(Hom2dId, 2, 2, Hom2dScale)</l>
+<l>* affine_trans_image(Image, ImageScale, Hom2dScale, 'constant', 'true')</l>
 </body>
 <docu id="main">
 <parameters/>
