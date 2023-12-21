@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* 图像仿射变换</c>
+<c></c>
+<l>read_image(Image, './images/triangle.png')</l>
+<l>threshold(Image, Regions, 200, 255)</l>
+<l>area_center(Regions, AreaA, ARow, ACol)</l>
+<l>get_image_size(Image, Width, Height)</l>
+<l>hom_mat2d_identity(Hom2dId)</l>
+<l>dev_clear_window()</l>
+<c></c>
+<c>* 平移</c>
+<l>hom_mat2d_translate(Hom2dId, Height/2-ARow, Width/2-ACol, Hom2dTrans)</l>
+<l>affine_trans_image(Image, ImageTrans, Hom2dTrans, 'constant', 'false')</l>
+<c></c>
+<c>* 旋转</c>
+<l>hom_mat2d_rotate(Hom2dId, 1.57, Height/2, Width/2, Hom2dRot)</l>
+<l>affine_trans_image(ImageTrans, ImageRot, Hom2dRot, 'constant', 'false')</l>
+<c></c>
+<c>* 缩放</c>
+<l>hom_mat2d_scale(Hom2dId, 2, 2, Width/2, Height/2, Hom2dScale)</l>
+<l>affine_trans_image(ImageRot, ImageScale, Hom2dScale, 'constant', 'false')</l>
+<c></c>
+<l>* write_image(ImageScale, 'png', 0, './ttt.png')</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>

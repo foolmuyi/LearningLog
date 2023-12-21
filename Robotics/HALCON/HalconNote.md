@@ -30,6 +30,8 @@
     - [代码设定ROI](#代码设定roi)
     - [交互式绘制ROI](#交互式绘制roi)
   - [图像变换](#图像变换)
+    - [仿射变换](#仿射变换)
+    - [投影变换](#投影变换)
 
 
 
@@ -281,8 +283,15 @@ reduce_domain (Image, ROI_0,ImageReduced)
 
 关于图像变换的理论知识可以参考[机器视觉自动检测技术](../机器视觉自动检测技术/MachineVision.md)中的“图像变换”章节，本节只介绍HALCON中进行图像变换操作需要用到的算子。
 
+### 仿射变换
+
 - `hom_mat2d_translate`：2维平移变换
 - `hom_mat2d_rotate`：2维旋转变换
 - `hom_mat2d_scale`：2维缩放变换
 - `hom_mat2d_identity`：生成一个2维齐次变换单位矩阵，即3×3单位阵
 - `affine_trans_image`：对图像进行2维仿射变换
+
+### 投影变换
+
+- `hom_vector_to_proj_hom_mat2d`：根据四对输入的匹配点计算单应性变换矩阵
+- `projective_trans_image`：对图片进行投影变换

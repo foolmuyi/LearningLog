@@ -15,7 +15,7 @@
 
 #### Docker: [Docker从入门到实践 - Github](https://docker-practice.github.io/zh-cn/)
 
-#### RoboDK: [RoboDK文档](https://robodk.com.cn/doc/cn/Basic-Guide.html)
+#### HALCON：[机器视觉(HALCON) - 哔哩哔哩](https://www.bilibili.com/video/BV1PU4y177AT)
 
 ---
 
@@ -24,8 +24,6 @@
 #### Control Bootcamp：[Control Bootcamp - Youtube](https://youtu.be/Pi7l8mMjYVE)
 
 #### Robotic Manipulation: [Robotci Manipulation - MIT](https://manipulation.csail.mit.edu/)
-
-#### 价格行为技术分析：[价格行为技术分析 - Youtube](https://www.youtube.com/watch?v=ZDfeSgVc9Hs&list=PL7WPLNsdMyYeE84KVcxKJjtoxqKZnW2kb)
 
 ---
 
@@ -39,6 +37,8 @@
 
 #### MQL5: [MQL5编程入门教程 - 哔哩哔哩](https://space.bilibili.com/342693735/channel/collectiondetail?sid=857554)　　[MQL5文档 - mql5.com](https://www.mql5.com/zh/docs)
 
+#### RoboDK: [RoboDK文档](https://robodk.com.cn/doc/cn/Basic-Guide.html)
+
 #### Python:
 
-##### Socket Programming：[Socket Programming in Python - realpython.com](https://realpython.com/python-sockets/)
+- Socket Programming：[Socket Programming in Python - realpython.com](https://realpython.com/python-sockets/)

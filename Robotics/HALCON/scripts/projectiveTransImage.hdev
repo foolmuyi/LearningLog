@@ -3,6 +3,8 @@
 <procedure name="main">
 <interface/>
 <body>
+<c>* 通过投影变换进行图片校正</c>
+<c></c>
 <l>read_image(Image, './images/slantQR.png')</l>
 <l>X := [163,280,362,75]</l>
 <l>Y := [125,120,361,340]</l>
