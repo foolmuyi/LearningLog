@@ -3,14 +3,11 @@
 <procedure name="main">
 <interface/>
 <body>
-<l>read_image(Image, './images/slantQR.png')</l>
-<l>X := [163,280,362,75]</l>
-<l>Y := [125,120,361,340]</l>
-<l>XRect := [75,360,360,75]</l>
-<l>YRect := [110,110,360,360]</l>
-<l>hom_vector_to_proj_hom_mat2d (X, Y, [1,1,1,1], XRect, YRect, [1,1,1,1], 'normalized_dlt', HomMat2dProj)</l>
-<l>dev_clear_window()</l>
-<l>projective_trans_image(Image, ImageRect, HomMat2dProj, 'bilinear','false', 'false')</l>
+<l>read_image(Image, 'fabrik')</l>
+<l>rgb1_to_gray (Image, ImageGray)</l>
+<l>stop()</l>
+<c></c>
+<c></c>
 </body>
 <docu id="main">
 <parameters/>

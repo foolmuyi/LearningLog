@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>read_image(Image, 'claudia')</l>
+<l>rgb1_to_gray (Image, ImageGray)</l>
+<l>stop()</l>
+<c></c>
+<c>* Gray transformation</c>
+<l>invert_image(ImageGray,ImageInvert)</l>
+<l>stop()</l>
+<l>emphasize (ImageGray, ImageEmphasize, 7, 7, 1)</l>
+<l>stop()</l>
+<l>scale_image (ImageGray,ImageScaled, 0.5, 0)</l>
+<l>stop()</l>
+<l>scale_image (ImageGray,ImageScaled, 2, 0)</l>
+<l>stop()</l>
+<c></c>
+<c>* Histogram equalization</c>
+<l>equ_histo_image (ImageGray,ImageEquHisto)</l>
+<l>stop()</l>
+<c></c>
+<c>* Image smoothing</c>
+<l>gauss_distribution (10, GaussDistribution)</l>
+<l>add_noise_distribution (ImageGray,ImageGaussNoise, GaussDistribution)</l>
+<l>stop()</l>
+<l>mean_image(ImageGaussNoise, ImageMean, 5, 5)</l>
+<l>stop()</l>
+<l>sp_distribution (5, 5, SPDistribution)</l>
+<l>add_noise_distribution (ImageGray, ImageSPNoise, SPDistribution)</l>
+<l>stop()</l>
+<l>median_image(ImageSPNoise,ImageMedian, 'circle', 2, 'mirrored')</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>

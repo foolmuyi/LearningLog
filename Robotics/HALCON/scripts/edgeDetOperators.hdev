@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>read_image(Image, 'fabrik')</l>
+<l>rgb1_to_gray (Image, ImageGray)</l>
+<l>stop()</l>
+<c></c>
+<c>* Roberts Operator</c>
+<l>roberts(ImageGray, ImageRoberts, 'gradient_sum')</l>
+<l>stop()</l>
+<c></c>
+<c>* Prewitt Operator</c>
+<l>prewitt_amp(ImageGray, ImagePrewitt)</l>
+<l>stop()</l>
+<c></c>
+<c>* Sobel Operator</c>
+<l>sobel_amp (ImageGray, ImageSobel, 'sum_abs',3)</l>
+<l>stop()</l>
+<l>threshold (ImageSobel, SobelEdge, 32, 255)</l>
+<l>stop()</l>
+<l>dev_clear_window()</l>
+<l>skeleton (SobelEdge, SobelSkeleton)</l>
+<l>stop()</l>
+<c></c>
+<c>* Laplace Operator</c>
+<l>laplace (ImageGray, ImageLaplace, 'absolute', 3, 'n_8')</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>

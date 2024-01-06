@@ -32,6 +32,12 @@
   - [图像变换](#图像变换)
     - [仿射变换](#仿射变换)
     - [投影变换](#投影变换)
+  - [图像增强](#图像增强)
+    - [灰度变换](#灰度变换)
+    - [直方图均衡化](#直方图均衡化)
+    - [图像平滑](#图像平滑)
+    - [图像锐化](#图像锐化)
+    - [频域滤波](#频域滤波)
 
 
 
@@ -295,3 +301,55 @@ reduce_domain (Image, ROI_0,ImageReduced)
 
 - `hom_vector_to_proj_hom_mat2d`：根据四对输入的匹配点计算单应性变换矩阵
 - `projective_trans_image`：对图片进行投影变换
+
+## 图像增强
+
+图像增强分类：
+
+- 空间域
+  - 点运算
+    - 灰度变换
+    - 直方图均衡化
+  - 邻域运算
+    - 图像平滑
+    - 图像锐化
+- 频率域
+  - 低通滤波
+  - 同态滤波
+  - 高通滤波
+
+### 灰度变换
+
+灰度变换即对图像上每一个点的灰度值进行操作从而得到新的图像，大致又可分为线性变换、分段线性变换和非线性变换（对数变换、伽马变换等）。
+
+- `invert_image`：灰度图像反转变换，`g' = 255 - g`
+- `emphasize`：增大图像对比度
+- `scale_image`：标准线性变换，可以设置斜率和截距
+
+### 直方图均衡化
+
+- `equ_histo_image`：直方图均衡化
+
+### 图像平滑
+
+- `gauss_distribution`：生成高斯噪声
+- `add_noise_distribution`：向图像添加噪声
+- `sp_distribution`：生成椒盐噪声
+- `mean_image`：均值滤波
+- `median_image`：中值滤波
+
+### 图像锐化
+
+- `roberts`：使用Roberts算子进行边缘检测
+- `prewitt_amp`：使用Prewitt算子进行边缘检测（仅幅值）
+- `prewitt_dir`：使用Prewitt算子进行边缘检测（幅值和方向）
+- `sobel_amp`：使用Sobel算子进行边缘检测（仅幅值）
+- `sobel_dir`：使用Sobel算子进行边缘检测（幅值和方向）
+- `skeleton`：提取骨架
+- `laplace`：使用Laplace算子进行边缘检测
+
+### 频域滤波
+
+- `fft_generic`：
+- `gen_lowpass`：
+- `gen_highpass`：

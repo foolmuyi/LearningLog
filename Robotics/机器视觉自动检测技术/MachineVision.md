@@ -224,23 +224,87 @@ $F$值越小，光圈越大\
 
 ## 边缘
 
-一阶导数可以用于检测图像中的一个点是否是边缘的点（灰度不变时一阶导数为零）
+![边缘](imgs/edge.png)
 
-![边缘](imgs/edge_1.png)
-
-二阶导数的符号可以用于判断一个边缘像素在边缘亮的一边还是暗的一边（正$\to$亮，负$\to$暗）
-
-![亮暗边缘](imgs/edge_2.png)
+一阶导数可以用于检测图像中的一个点是否是边缘的点。边缘在一阶导数绝对值最大处。
+二阶导数的符号可以用于判断一个边缘像素在边缘亮的一边还是暗的一边（正$\to$暗，负$\to$亮）。边缘在二阶导数过零点处。
 
 ## 边缘检测算子
 
 ### 梯度算子
 
-Roberts算子（2$\times$2模板）、Prewitt算子（3$\times$3模板）、Sobel算子（3$\times$3模板，增大中心点的权重）
+使用模板计算一阶梯度，对图像做卷积，从而检测边缘。
+
+- Roberts算子
+$$
+M_x = 
+\begin{pmatrix}
+0 & 1 \\
+-1 & 0
+\end{pmatrix}
+\qquad
+M_y = 
+\begin{pmatrix}
+1 & 0 \\
+0 & -1
+\end{pmatrix}
+\qquad
+g(x,y)=\sqrt{G_x^2+G_y^2}
+$$
+- Prewitt算子
+$$
+M_x = 
+\begin{pmatrix}
+-1 & 0 & 1 \\
+-1 & 0 & 1 \\
+-1 & 0 & 1
+\end{pmatrix}
+\qquad
+M_y = 
+\begin{pmatrix}
+1 & 1 & 1 \\
+0 & 0 & 0 \\
+-1 & -1 & -1
+\end{pmatrix}
+\qquad
+g(x,y)=\sqrt{G_x^2+G_y^2}
+$$
+- Sobel算子
+$$
+M_x = 
+\begin{pmatrix}
+-1 & 0 & 1 \\
+-2 & 0 & 2 \\
+-1 & 0 & 1
+\end{pmatrix}
+\qquad
+M_y = 
+\begin{pmatrix}
+1 & 2 & 1 \\
+0 & 0 & 0 \\
+-1 & -2 & -1
+\end{pmatrix}
+\qquad
+g(x,y)=\sqrt{G_x^2+G_y^2}
+$$
 
 ### 拉普拉斯算子
 
-对噪声敏感，容易产生双像素边缘
+使用模板计算二阶梯度，对图像做卷积，从而检测边缘。对噪声敏感，容易产生双像素边缘。拉普拉斯算子的模板可以有多种形式，以下是两种常用的形式。
+
+$$
+\begin{pmatrix}
+0 & 1 & 0 \\
+1 & -4 & 1 \\
+0 & 1 & 0
+\end{pmatrix}
+\qquad 或 \qquad
+\begin{pmatrix}
+1 & 1 & 1 \\
+1 & -8 & 1 \\
+1 & 1 & 1
+\end{pmatrix}
+$$
 
 ### Canny算子
 
