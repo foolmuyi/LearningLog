@@ -5,9 +5,11 @@
 <body>
 <l>read_image(Image, 'fabrik')</l>
 <l>rgb1_to_gray (Image, ImageGray)</l>
+<l>get_image_size (ImageGray, Width, Height)</l>
 <l>stop()</l>
-<c></c>
-<c></c>
+<l>laplace_of_gauss (ImageGray, ImageLaplace, 7)</l>
+<l>zero_crossing (ImageLaplace, RegionCrossing)</l>
+<l>skeleton (RegionCrossing, Skeleton)</l>
 </body>
 <docu id="main">
 <parameters/>

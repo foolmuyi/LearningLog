@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>read_image(Image, 'pellets')</l>
+<l>rgb1_to_gray (Image, ImageGray)</l>
+<l>get_image_size (ImageGray, Width, Height)</l>
+<l>stop()</l>
+<l>mean_image(ImageGray, ImageMean, 100, 100)</l>
+<l>stop()</l>
+<l>dyn_threshold (ImageGray, ImageMean, RegionDynThresh, 10, 'light')</l>
+<l>stop()</l>
+<l>connection (RegionDynThresh, ConnectedRegions1)</l>
+<l>dev_clear_window ()</l>
+<l>select_shape (ConnectedRegions1, SelectedRegions, 'area', 'and', 50, 5500)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>

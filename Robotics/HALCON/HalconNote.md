@@ -38,6 +38,9 @@
     - [图像平滑](#图像平滑)
     - [图像锐化](#图像锐化)
     - [频域滤波](#频域滤波)
+  - [图像分割](#图像分割)
+    - [阈值分割](#阈值分割)
+    - [边缘检测](#边缘检测)
 
 
 
@@ -347,9 +350,27 @@ reduce_domain (Image, ROI_0,ImageReduced)
 - `sobel_dir`：使用Sobel算子进行边缘检测（幅值和方向）
 - `skeleton`：提取骨架
 - `laplace`：使用Laplace算子进行边缘检测
+- `laplace_of_gauss`：LoG算子，即先对图像进行高斯平滑去除一些噪声，再用Laplace算子检测边缘
 
 ### 频域滤波
 
-- `fft_generic`：
-- `gen_lowpass`：
-- `gen_highpass`：
+- `fft_image`：计算图像的傅里叶变换
+- `fft_image_inv`：计算图像的反向傅里叶变换
+- `fft_generic`：计算图像的傅里叶变换或者反向傅里叶变换（通过输入参数选择），并且相比于`fft_image`和`fft_image_inv`可以设置更多参数，适用于较复杂的场景
+- `gen_lowpass`：生成低通滤波器
+- `gen_highpass`：生成高通滤波器
+- `convol_fft`：使用滤波器对图像在频域做卷积
+
+## 图像分割
+
+### 阈值分割
+
+- `gray_histo`：计算灰度的直方图分布
+- `histo_to_thresh`：根据直方图进行阈值分割，返回每个分割区间的上下阈值
+- `threshold`：根据给定灰度阈值对图像进行分割
+- `auto_threshold`：综合上述三个算子的功能，一步输出根据灰度直方图进行阈值分割的结果
+- `mean_image`：均值滤波
+- `dyn_threshold`：根据原图像和处理后的图像（比如均值滤波后的图像）每个像素灰度的偏差值来确定局部阈值，从而对图像进行分割
+- `select_shape`：根据面积、长、宽等多种特征来从众多区域中选择符合条件的区域
+
+### 边缘检测

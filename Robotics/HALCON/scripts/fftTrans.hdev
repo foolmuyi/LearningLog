@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<c>* Example 1: use highpass filter</c>
+<l>read_image(Image, 'fingerprint')</l>
+<l>rgb1_to_gray (Image, ImageGray)</l>
+<l>get_image_size (ImageGray, Width, Height)</l>
+<l>stop()</l>
+<c></c>
+<l>gen_highpass (ImageHighpass, 0.05, 'none', 'dc_center', Width, Height)</l>
+<l>fft_image (ImageGray, ImageFFT)</l>
+<l>stop()</l>
+<l>convol_fft (ImageFFT, ImageHighpass, ImageConvol)</l>
+<l>stop()</l>
+<l>fft_image_inv (ImageConvol, ImageFFTInv)</l>
+<l>stop()</l>
+<c></c>
+<c></c>
+<c>* Example 2: select area from freq graph manually</c>
+<l>read_image(Image, 'graph_paper')</l>
+<l>rgb1_to_gray (Image, ImageGray)</l>
+<l>stop()</l>
+<c></c>
+<l>fft_image(ImageGray, ImageFFT)</l>
+<l>stop()</l>
+<c></c>
+<l>gen_rectangle1 (ImageFilterHor, 1270, 100, 1290, 2000)</l>
+<l>* gen_rectangle1 (ImageFilterVer, 100, 1000, 2000, 1050)</l>
+<l>dev_clear_window()</l>
+<l>reduce_domain(ImageFFT, ImageFilterHor,ImageResult)</l>
+<l>* paint_region (ImageFilterHor, ImageFFT, ImageResult, 255, 'fill')</l>
+<l>stop()</l>
+<l>fft_image_inv(ImageResult, ImageFFTInv)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>
