@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>read_image(Image, 'circle_plate')</l>
+<l>rgb1_to_gray (Image, ImageGray)</l>
+<l>stop()</l>
+<l>dev_clear_window ()</l>
+<l>edges_image (ImageGray, ImaAmp, ImaDir, 'canny', 1, 'nms', 15, 40)</l>
+<l>stop()</l>
+<l>hough_line_trans (ImaAmp, HoughImage, 4)</l>
+<l>stop()</l>
+<l>dev_clear_window()</l>
+<l>dev_display(ImaAmp)</l>
+<l>hough_lines (ImaDir, 4, 500, 5, 5, Angle, Dist)</l>
+<l>gen_region_hline (Regions, Angle, Dist)</l>
+<l>stop()</l>
+<l>hough_lines_dir (ImaDir, HoughImage, Lines, 2, 4, 'mean', 5, 100, 5, 5, 'true', Angle, Dist)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>

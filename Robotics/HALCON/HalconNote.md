@@ -47,8 +47,10 @@
     - [区域分割](#区域分割)
       - [区域生长](#区域生长)
       - [区域分裂合并](#区域分裂合并)
+      - [分水岭算法](#分水岭算法)
 
 
+***本文专注于介绍HALCON常用算子的使用，关于机器视觉的理论知识可以参考[机器视觉自动检测技术](../机器视觉自动检测技术/MachineVision.md)***
 
 # 认识HALCON
 
@@ -388,7 +390,15 @@ reduce_domain (Image, ROI_0,ImageReduced)
 
 #### 直线检测
 
+- `hough_lines_dir`：在边缘检测结果图像中使用Hough变换检测直线，输入为边缘检测的方向图像（ImaDir），输出包括两个数组Angle（检测到的线法向量的角度）和Dist（检测到的线距原点的距离），还有检测出的直线的图像
+- `hough_lines`：与`hough_lines_dir`类似，但只输出Angle和Dist不直接输出图像，如果要显示图像可以使用`gen_region_hline`生成。另外不像`hough_lines_dir`算子自带图像平滑选项，所以检测的结果可能含有较多噪声
+- `hough_line_trans`：输出Hough变换的中间图像，即极坐标下多条曲线的交点
+- `gen_region_hline`：根据Hough变换输出的Angle和Dist在图像上画出对应的直线
+
 #### 圆检测
+
+- `hough_circles`：给定一个半径，在边缘检测结果中寻找指定半径的圆的圆心
+- `hough_circle_trans`：Hough变换的中间图像，投票结果
 
 ### 区域分割
 
@@ -396,6 +406,7 @@ reduce_domain (Image, ROI_0,ImageReduced)
 
 - `regiongrowing`：使用区域生长方法对图像进行分割，返回分割后的多个区域
 - `regiongrowing_mean`：指定一个起始点作为种子进行区域生长，返回生长出的一个区域
+- `shape_trans`：对输入区域进行变换，实际上就是根据输入区域计算其最小外接圆、最大内切圆、最小外接矩形等等，在区域生长中我们常常用此算子获取区域的“inner center”（输入区域骨架上与输入区域重心距离最小的点）并以该点作为种子进行生长
 
 #### 区域分裂合并
 
@@ -409,3 +420,9 @@ reduce_domain (Image, ROI_0,ImageReduced)
 - 两区域的纹理特征相似
 - 两区域的灰度分布统计函数相似
 - ......
+
+#### 分水岭算法
+
+- `watersheds`：从输入图像中提取分水岭和盆地
+- `watersheds_threshold`：带阈值的分水岭算法，第一步和`watersheds`算子一样，然后根据阈值将比较接近的盆地合并
+- `watersheds_marker`：从指定的区域（marker）开始淹没

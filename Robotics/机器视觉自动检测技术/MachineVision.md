@@ -362,6 +362,9 @@ Hough变换
 
 由于垂直直线的斜率$a$无穷大，一般用极坐标形式
 $\rho = xcos\theta + ysin\theta$\
+
+![极坐标下的Hough变换](./imgs/hough_polar.png)
+
 除了检测直线外，Hough变换也可用于检测曲线，如圆、椭圆等。
 
 ## 间距测量

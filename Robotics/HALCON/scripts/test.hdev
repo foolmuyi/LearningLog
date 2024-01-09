@@ -6,18 +6,17 @@
 <l>read_image(Image, 'circle_plate')</l>
 <l>rgb1_to_gray (Image, ImageGray)</l>
 <l>stop()</l>
-<c>* gauss smoothing</c>
-<l>mean_image (ImageGray, ImageMean, 3, 3)</l>
-<c>* first regiongrowing, segment the image roughly, got 18 regions (expect 13)</c>
-<l>regiongrowing (ImageMean, Regions, 3, 3, 5, 500)</l>
+<l>gauss_filter (ImageGray, ImageGauss, 7)</l>
+<l>watersheds (ImageGauss, Basins, Watersheds)</l>
 <l>stop()</l>
-<c>* find the centers of regions segmented by first regiongrowing</c>
-<l>shape_trans (Regions, RegionTrans, 'inner_center')</l>
-<l>connection (RegionTrans, ConnectedRegions1)</l>
-<l>area_center (ConnectedRegions1, Area, Row, Column)</l>
 <l>dev_clear_window ()</l>
-<c>* use these centers as seeds to regiongrow again, got 13 regions (expect 13)</c>
-<l>regiongrowing_mean (ImageMean, NewRegions, Row, Column, 20, 600)</l>
+<l>watersheds_threshold (ImageGauss, Basins, 35)</l>
+<l>stop()</l>
+<l>dev_clear_window ()</l>
+<l>threshold (ImageGauss, Region, 0, 128)</l>
+<l>* connection (Region, ConnectedRegions)</l>
+<l>* shape_trans (ConnectedRegions, RegionTrans, 'inner_center')</l>
+<l>watersheds_marker (ImageGauss, Region, Basins)</l>
 </body>
 <docu id="main">
 <parameters/>
