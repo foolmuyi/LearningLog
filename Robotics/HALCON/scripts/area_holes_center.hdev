@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>read_image(Image, 'rings_and_nuts')</l>
+<l>rgb1_to_gray (Image, ImageGray)</l>
+<l>stop()</l>
+<c></c>
+<c>* count pixels by area_holes</c>
+<l>threshold (ImageGray, Region, 128, 255)</l>
+<l>area_holes (Region, Area)</l>
+<l>dev_display (Image)</l>
+<l>tuple_string ([Area], '.d', String)</l>
+<l>String := 'Total Pixels of Objects: ' + String</l>
+<l>dev_disp_text (String, 'window', 'center', 'center', 'black', [], [])</l>
+<l>stop()</l>
+<c></c>
+<c>* count pixels by area_center for each object</c>
+<l>dev_clear_window ()</l>
+<l>threshold (ImageGray, Region1, 0, 128)</l>
+<l>connection (Region1, ConnectedRegions)</l>
+<l>area_center (ConnectedRegions, Area1, Row, Column)</l>
+<l>count_obj (ConnectedRegions, Number)</l>
+<l>dev_display(Image)</l>
+<l>NewArea := 0</l>
+<l>for i:=1 to Number-1 by 1</l>
+<l>    dev_get_window (WindowHandle)</l>
+<l>    disp_message (WindowHandle, Area1[i], 'image', Row[i], Column[i], 'black', 'true')</l>
+<l>    NewArea := NewArea + Area1[i]</l>
+<l>    stop()</l>
+<l>endfor</l>
+<l>tuple_string ([NewArea], '.d', String)</l>
+<l>String := 'Total Pixels of Objects: ' + String</l>
+<l>dev_disp_text (String, 'window', 'center', 'center', 'black', [], [])</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>

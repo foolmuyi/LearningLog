@@ -3,20 +3,14 @@
 <procedure name="main">
 <interface/>
 <body>
-<l>read_image(Image, 'circle_plate')</l>
+<l>read_image(Image, 'mreut')</l>
 <l>rgb1_to_gray (Image, ImageGray)</l>
+<l>get_image_size (ImageGray, Width, Height)</l>
 <l>stop()</l>
-<l>gauss_filter (ImageGray, ImageGauss, 7)</l>
-<l>watersheds (ImageGauss, Basins, Watersheds)</l>
+<l>threshold (ImageGray, Region, 0, 168)</l>
 <l>stop()</l>
-<l>dev_clear_window ()</l>
-<l>watersheds_threshold (ImageGauss, Basins, 35)</l>
+<l>cooc_feature_image (Region, ImageGray, 6, 0, Energy, Correlation, Homogeneity, Contrast)</l>
 <l>stop()</l>
-<l>dev_clear_window ()</l>
-<l>threshold (ImageGauss, Region, 0, 128)</l>
-<l>* connection (Region, ConnectedRegions)</l>
-<l>* shape_trans (ConnectedRegions, RegionTrans, 'inner_center')</l>
-<l>watersheds_marker (ImageGauss, Region, Basins)</l>
 </body>
 <docu id="main">
 <parameters/>
