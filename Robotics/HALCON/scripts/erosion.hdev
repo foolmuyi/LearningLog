@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>read_image(Image, 'bga_14x14_model')</l>
+<l>rgb1_to_gray (Image, ImageGray)</l>
+<l>stop()</l>
+<c></c>
+<l>threshold (ImageGray, Region, 0, 128)</l>
+<l>shape_trans (Region, RegionTrans, 'convex')</l>
+<l>stop()</l>
+<c></c>
+<l>dev_display (Image)</l>
+<l>dev_disp_text ('Eroded by circle', 'image', 60, 150, 'black', [], [])</l>
+<l>erosion_circle (RegionTrans, RegionErosion, 35)</l>
+<l>stop()</l>
+<c></c>
+<l>dev_display (Image)</l>
+<l>dev_disp_text ('Eroded by rectangle', 'image', 60, 150, 'black', [], [])</l>
+<l>erosion_rectangle1 (RegionTrans, RegionErosion1, 100, 100)</l>
+<l>stop()</l>
+<c></c>
+<l>dev_clear_window ()</l>
+<l>gen_ellipse (Ellipse, 200, 200, 0, 50, 30)</l>
+<l>stop()</l>
+<l>dev_display (Image)</l>
+<l>dev_disp_text ('Eroded by previous ellipse', 'image', 60, 150, 'black', [], [])</l>
+<l>erosion1 (RegionTrans, Ellipse, RegionErosion2, 2)</l>
+<l>stop()</l>
+<c></c>
+<l>dev_display (Image)</l>
+<l>dev_disp_text ('Eroded by ellipse with reference point', 'image', 60, 150, 'black', [], [])</l>
+<l>erosion2 (RegionTrans, Ellipse, RegionErosion3, 200, 100, 1)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>

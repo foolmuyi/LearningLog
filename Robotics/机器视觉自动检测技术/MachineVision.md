@@ -19,6 +19,7 @@
   - [腐蚀](#腐蚀)
   - [开运算](#开运算)
   - [闭运算](#闭运算)
+  - [击中击不中变换 (Hit-or-Miss Transformation)](#击中击不中变换-hit-or-miss-transformation)
   - [形态学的应用](#形态学的应用)
     - [边界提取](#边界提取)
     - [骨架](#骨架)
@@ -196,6 +197,22 @@ $F$值越小，光圈越大\
 ## 闭运算
 
 先膨胀再腐蚀。同样使轮廓变得光滑，但主要是消除长而细的鸿沟、小的孔洞，并填补轮廓线中的裂痕。
+
+## 击中击不中变换 (Hit-or-Miss Transformation)
+
+HMT是一种通过腐蚀进行模板匹配的方法。例如，在下图A中寻找图B所示图案的位置。
+
+![Hit or Miss](./imgs/hit_or_miss_1.png)
+
+算法的步骤如下：
+- 首先，以目标物体B为基础构造结构元H，然后取H的补集构造结构元M。
+  ![Struct Elements](./imgs/hit_or_miss_struct_elements.png)
+- 然后，用H对A进行腐蚀。
+  ![Erosion 1](./imgs/hit_or_miss_erosion_1.png)
+- 同样地。用M对A的补集进行腐蚀。
+  ![Erosion 2](./imgs/hit_or_miss_erosion_2.png)
+- 最后，对两次腐蚀的结果求交集，得到的结果就是目标的位置。
+  ![Result](./imgs/hit_or_miss_result.png)
 
 ## 形态学的应用
 
