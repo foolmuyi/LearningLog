@@ -6,37 +6,44 @@
 <l>read_image(Image, 'rings_and_nuts')</l>
 <l>rgb1_to_gray (Image, ImageGray)</l>
 <l>get_image_size (ImageGray, Width, Height)</l>
+<l>dev_disp_text ('original image', 'image', Height/2, Width/2, 'black', [], [])</l>
 <l>stop()</l>
 <c></c>
 <l>threshold (ImageGray, Region, 0, 128)</l>
 <l>connection (Region, ConnectedRegions)</l>
+<l>dev_clear_window ()</l>
 <l>select_shape (ConnectedRegions, SelectedRegions, 'area', 'and', 6000, 99999)</l>
+<l>dev_disp_text ('selected region', 'image', Height/2, Width/2, 'black', [], [])</l>
 <l>stop()</l>
 <c></c>
 <c>* inner boundary</c>
 <l>dev_clear_window ()</l>
 <l>boundary (SelectedRegions, RegionBorder, 'inner')</l>
+<l>dev_disp_text ('inner boundary', 'image', Height/2, Width/2, 'black', [], [])</l>
 <l>stop()</l>
 <c></c>
 <c>* outer boundary</c>
 <l>dev_clear_window ()</l>
 <l>boundary (SelectedRegions, RegionBorder, 'outer')</l>
+<l>dev_disp_text ('outer boundary', 'image', Height/2, Width/2, 'black', [], [])</l>
 <l>stop()</l>
 <c></c>
 <c>* inner boundary filled</c>
 <l>dev_clear_window ()</l>
 <l>boundary (SelectedRegions, RegionBorder, 'inner_filled')</l>
+<l>dev_disp_text ('inner boundary filled', 'image', Height/2, Width/2, 'black', [], [])</l>
 <l>stop()</l>
 <c></c>
 <c>* fill up holes</c>
 <l>dev_clear_window ()</l>
 <l>fill_up (RegionBorder, RegionFillUp)</l>
+<l>dev_disp_text ('fill up holes', 'image', Height/2, Width/2, 'black', [], [])</l>
 <l>stop()</l>
 <c></c>
-<c>* fill up holes satisfying the conditions</c>
+<c>* fill up holes satisfying given conditions</c>
 <l>dev_display (Image)</l>
 <l>fill_up_shape (Region, RegionFillUp1, 'area', 1000, 3000)</l>
-<l>skeleton (</l>
+<l>dev_disp_text ('fill up holes satisfying conditions', 'image', Height/2, Width/2, 'black', [], [])</l>
 </body>
 <docu id="main">
 <parameters/>

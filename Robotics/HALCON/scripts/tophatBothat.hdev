@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="23.11.0.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>read_image(Image, 'numbers_scale')</l>
+<l>rgb1_to_gray (Image, ImageGray)</l>
+<l>get_image_size (ImageGray, Width, Height)</l>
+<l>invert_image (ImageGray, ImageInvert)</l>
+<l>dev_disp_text ('Original image', 'image', Height/5, Width-100, 'black', [], [])</l>
+<l>stop()</l>
+<c></c>
+<l>gen_disc_se (SE1, 'byte', 25, 25, 0)</l>
+<l>gray_opening (ImageInvert, SE1, ImageOpening1)</l>
+<l>dev_disp_text ('Gray opening result', 'image', Height/5, Width-100, 'black', [], [])</l>
+<l>stop()</l>
+<c></c>
+<l>gray_tophat (ImageInvert, SE1, ImageTopHat)</l>
+<l>dev_disp_text ('Gray tophat result', 'image', Height/5, Width-100, 'black', [], [])</l>
+<l>stop()</l>
+<c></c>
+<l>dev_display (ImageGray)</l>
+<l>dev_disp_text ('Original image', 'image', Height/5, Width-100, 'black', [], [])</l>
+<l>stop()</l>
+<c></c>
+<l>gen_disc_se (SE2, 'byte', 50, 50, 255)</l>
+<l>gray_closing (ImageGray, SE2, ImageClosing)</l>
+<l>dev_disp_text ('Gray closing result', 'image', Height/5, Width-100, 'black', [], [])</l>
+<l>stop()</l>
+<c></c>
+<l>gray_bothat (ImageGray, SE2, ImageBotHat)</l>
+<l>dev_disp_text ('Gray bothat result', 'image', Height/5, Width-100, 'black', [], [])</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>
