@@ -526,3 +526,12 @@ reduce_domain (Image, ROI_0,ImageReduced)
 - `skeleton`：提取区域的骨架
 
 ## 模板匹配
+
+- `create_ncc_model`：创建一个ncc模型用于模板匹配
+- `find_ncc_model`：使用ncc模型在图像中进行匹配，返回匹配结果
+- `clear_ncc_model`：释放ncc模型占用的内存
+- `create_shape_model`：创建一个基于形状特征的模板匹配模型
+- `find_shape_model`：使用基于形状特征的模板匹配模型进行匹配
+- `clear_shape_model`：释放模型占用的内存
+- `create_scaled_shape_model`：创建一个基于形状特征且包含各向同性尺寸缩放的模板匹配模型
+- `create_aniso_shape_model`：创建一个基于形状特征且包含各向异性尺寸缩放的模板匹配模型
