@@ -61,6 +61,8 @@
     - [顶帽底帽变换](#顶帽底帽变换)
     - [形态学应用](#形态学应用)
   - [模板匹配](#模板匹配)
+    - [基于灰度](#基于灰度)
+    - [基于形状特征](#基于形状特征)
 
 
 ***本文专注于介绍HALCON常用算子的使用，关于机器视觉的理论知识可以参考[机器视觉自动检测技术](../机器视觉自动检测技术/MachineVision.md)***
@@ -527,10 +529,15 @@ reduce_domain (Image, ROI_0,ImageReduced)
 
 ## 模板匹配
 
+### 基于灰度
+
 - `create_ncc_model`：创建一个ncc模型用于模板匹配
 - `find_ncc_model`：使用ncc模型在图像中进行匹配，返回匹配结果
 - `clear_ncc_model`：释放ncc模型占用的内存
 - `create_shape_model`：创建一个基于形状特征的模板匹配模型
+
+### 基于形状特征
+
 - `find_shape_model`：使用基于形状特征的模板匹配模型进行匹配
 - `clear_shape_model`：释放模型占用的内存
 - `create_scaled_shape_model`：创建一个基于形状特征且包含各向同性尺寸缩放的模板匹配模型
