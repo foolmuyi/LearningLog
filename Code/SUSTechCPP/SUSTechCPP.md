@@ -7,7 +7,11 @@
   - [预处理和宏](#预处理和宏)
     - [预处理 (Preprocessor)](#预处理-preprocessor)
     - [宏 (Macros)](#宏-macros)
-  - [Simple input and output](#simple-input-and-output)
+  - [简单输入与输出](#简单输入与输出)
+    - [C++风格的输出](#c风格的输出)
+    - [C++风格的输入](#c风格的输入)
+    - [C风格的输出](#c风格的输出-1)
+    - [C风格的输入](#c风格的输入-1)
   - [Command line arguments](#command-line-arguments)
   - [Exercises](#exercises)
 - [Data Types and Arithmetic Operators](#data-types-and-arithmetic-operators)
@@ -106,6 +110,23 @@ int main()
 ![Macros](./img/macros.png)
 需要注意的是，这里的`PI`不能理解为变量，应该当作纯粹的文本替换。事实上，不仅可以将常量定义为宏，函数也可以定义为宏，例如`#define ADD(a, b) (a + b)`
 
+## 简单输入与输出
+
+### C++风格的输出
+
+`cout`：`cout`是`std`命名空间`ostream`类型的对象，即`std::ostream cout；`。`<<`是一个运算符，表示将其后面的内容传递给前面的对象，例如`cout << "hello";`表示将`hello`传递给`cout`进行输出。`endl`表示一个换行符。
+
+### C++风格的输入
+
+`cin`：与`cout`类似，数据类型为`std::istream`，`>>`与`<<`也类似，例如`cin >> a;`表示将通过`cin`获取的数据传给变量`a`。
+
+### C风格的输出
+
+C使用`printf()`或者`fprintf()`进行输出，这两个都是函数，按照调用函数的方式使用即可，输出的内容可以使用`%d`、`%.2f`等进行格式化输出，例如`printf("Hello, value = %d\n", 100);`。
+
+### C风格的输入
+
+C风格的输入使用`scanf`，这也是一个函数，例如`scanf("%d", &a);`表示将输出的数据作为十进制整数赋给变量`a`。需要注意的是，这里的`a`前面必须加上`&`，表示取变量`a`的地址。
 
 
 
@@ -120,11 +141,6 @@ int main()
 
 
 
-
-
-
-
-## Simple input and output
 
 ## Command line arguments
 
