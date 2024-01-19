@@ -12,15 +12,87 @@
     - [C++风格的输入](#c风格的输入)
     - [C风格的输出](#c风格的输出-1)
     - [C风格的输入](#c风格的输入-1)
-  - [Command line arguments](#command-line-arguments)
-  - [Exercises](#exercises)
-- [Data Types and Arithmetic Operators](#data-types-and-arithmetic-operators)
-  - [Integer numbers](#integer-numbers)
+- [数据类型和算数运算符](#数据类型和算数运算符)
+  - [整数](#整数)
   - [Different integer types](#different-integer-types)
   - [Floating-point numbers](#floating-point-numbers)
   - [Constant numbers and constant variables](#constant-numbers-and-constant-variables)
   - [Arithmetic operators](#arithmetic-operators)
   - [Special notes](#special-notes)
+- [分支与循环语句](#分支与循环语句)
+  - [`if` statement](#if-statement)
+  - [`? :` operator](#--operator)
+  - [Conditional expressions](#conditional-expressions)
+  - [`while` loop](#while-loop)
+  - [`for` loop](#for-loop)
+  - [`goto` statement](#goto-statement)
+  - [`switch` statement](#switch-statement)
+- [数据结构](#数据结构)
+  - [Arrays](#arrays)
+  - [Strings](#strings)
+  - [Structures unions and enumerations](#structures-unions-and-enumerations)
+  - [`typedef`](#typedef)
+- [内存和指针](#内存和指针)
+  - [Pointers](#pointers)
+  - [Pointers and arrays](#pointers-and-arrays)
+  - [Allocate memory in C style](#allocate-memory-in-c-style)
+  - [Allocate memory in C++ style](#allocate-memory-in-c-style-1)
+- [函数基础](#函数基础)
+  - [Functions](#functions)
+  - [Function parameters](#function-parameters)
+  - [References](#references)
+  - [`return` statement](#return-statement)
+  - [`inline` function](#inline-function)
+- [函数进阶](#函数进阶)
+  - [Default arguments](#default-arguments)
+  - [Function overloading](#function-overloading)
+  - [Function templates](#function-templates)
+  - [Function pointers and references](#function-pointers-and-references)
+  - [Recursive functions](#recursive-functions)
+- [程序加速](#程序加速)
+  - [C and C++ with ARM](#c-and-c-with-arm)
+  - [Speedup your program](#speedup-your-program)
+  - [An example with SIMD and OpenMP](#an-example-with-simd-and-openmp)
+  - [Avoid memory copy in OpenCV](#avoid-memory-copy-in-opencv)
+- [类基础](#类基础)
+  - [Classes and objects](#classes-and-objects)
+  - [Constructors and destructors](#constructors-and-destructors)
+  - [`this` pointer](#this-pointer)
+  - [`const` and `static` members](#const-and-static-members)
+- [类进阶](#类进阶)
+  - [Operators in OpenCV](#operators-in-opencv)
+  - [Operator overloading](#operator-overloading)
+  - [Friend functions](#friend-functions)
+  - [User defined type conversion](#user-defined-type-conversion)
+  - [Increment and decrement operators](#increment-and-decrement-operators)
+- [类的动态内存管理](#类的动态内存管理)
+  - [Some default operations](#some-default-operations)
+  - [An example with dynamic memory](#an-example-with-dynamic-memory)
+  - [Solution1: Hard copy](#solution1-hard-copy)
+  - [Solution2: Soft copy](#solution2-soft-copy)
+  - [Smart pointers](#smart-pointers)
+- [类的继承](#类的继承)
+  - [Improve your source code](#improve-your-source-code)
+  - [Derived class](#derived-class)
+  - [Access control](#access-control)
+  - [Virtual functions](#virtual-functions)
+  - [Inheritance and dynamic memory allocation](#inheritance-and-dynamic-memory-allocation)
+  - [Examples in opencv](#examples-in-opencv)
+- [类模板和std库](#类模板和std库)
+  - [Class template](#class-template)
+  - [Template non-type parameters](#template-non-type-parameters)
+  - [Class template specialization](#class-template-specialization)
+  - [`std` classes](#std-classes)
+- [错误处理](#错误处理)
+  - [Standard output stream and standard error stream](#standard-output-stream-and-standard-error-stream)
+  - [`assert`](#assert)
+  - [Exceptions](#exceptions)
+  - [More about exceptions](#more-about-exceptions)
+  - [`nothrow`](#nothrow)
+- [嵌套类和RTTI](#嵌套类和rtti)
+  - [Friend classes](#friend-classes)
+  - [Nested types](#nested-types)
+  - [RTTI and type cast operators](#rtti-and-type-cast-operators)
 
 
 # 课程介绍
@@ -128,6 +200,39 @@ C使用`printf()`或者`fprintf()`进行输出，这两个都是函数，按照�
 
 C风格的输入使用`scanf`，这也是一个函数，例如`scanf("%d", &a);`表示将输出的数据作为十进制整数赋给变量`a`。需要注意的是，这里的`a`前面必须加上`&`，表示取变量`a`的地址。
 
+# 数据类型和算数运算符
+
+## 整数
+
+- `int`：最常用的整数类型。  
+  ```C++
+  int i;  // 声明一个整数变量
+  int j = 10;  // 声明并赋值
+  ```
+- 需要强调的是，务必要对变量进行初始化赋值，因为未初始化的变量在不同的平台不同的编译器编译出来的值是不同的，可能导致奇奇怪怪的问题，非常难以排查。初始化的方式有以下几种：
+  ```C++
+  int num;
+  num = 10;    // 一定要赋值！
+
+  int num = 10;
+
+  int num (10);
+
+  int num {10};
+  ```
+- 我们常用的`int`其实是`signed int`的缩写，通常是32位的（在个别比较老的设备上可能是16位的），所以能够表示的数的范围为$[-2^{31}, 2^{31}-1]$。如果只需要取正数，可以使用`unsigned int`，能够表示的范围为$[0, 2^{32}-1]$。除此之外，还有`short int`，`long int`，`long long`，但需要注意，C和C++的标准并没有对它们的位数做明确的规定，只规定了每种类型的最少位数，因此在不同的设备上可能有所不同。
+- `sizeof`：通过`sizeof`我们可以获取一种数据类型或者一个变量所占的字节数。注意，`sizeof`不是一个函数，而是一个操作符 (operator)。  
+  ```C++
+    int i = 0;
+    short s = 0;
+
+    cout << "sizeof(i) = " << sizeof(i) << endl;
+    cout << "sizeof(int) = " << sizeof(int) << endl;
+    cout << "sizeof(s) = " << sizeof(s) << endl;
+    cout << "sizeof(short) = " << sizeof(short) << endl;
+    cout << "sizeof(long) = " << sizeof(long) << endl;
+    cout << "sizeof(long long) = " << sizeof(long long) << endl;
+  ```
 
 
 
@@ -142,13 +247,15 @@ C风格的输入使用`scanf`，这也是一个函数，例如`scanf("%d", &a);`
 
 
 
-## Command line arguments
 
-## Exercises
 
-# Data Types and Arithmetic Operators
 
-## Integer numbers
+
+
+
+
+
+
 
 ## Different integer types
 
@@ -159,3 +266,151 @@ C风格的输入使用`scanf`，这也是一个函数，例如`scanf("%d", &a);`
 ## Arithmetic operators
 
 ## Special notes
+
+# 分支与循环语句
+
+## `if` statement
+
+## `? :` operator
+
+## Conditional expressions
+
+## `while` loop
+
+## `for` loop
+
+## `goto` statement
+
+## `switch` statement
+
+# 数据结构
+
+## Arrays
+
+## Strings
+
+## Structures unions and enumerations
+
+## `typedef`
+
+# 内存和指针
+
+## Pointers
+
+## Pointers and arrays
+
+## Allocate memory in C style
+
+## Allocate memory in C++ style
+
+# 函数基础
+
+## Functions
+
+## Function parameters
+
+## References
+
+## `return` statement
+
+## `inline` function
+
+# 函数进阶
+
+## Default arguments
+
+## Function overloading
+
+## Function templates
+
+## Function pointers and references
+
+## Recursive functions
+
+# 程序加速
+
+## C and C++ with ARM
+
+## Speedup your program
+
+## An example with SIMD and OpenMP
+
+## Avoid memory copy in OpenCV
+
+# 类基础
+
+## Classes and objects
+
+## Constructors and destructors
+
+## `this` pointer
+
+## `const` and `static` members
+
+# 类进阶
+
+## Operators in OpenCV
+
+## Operator overloading
+
+## Friend functions
+
+## User defined type conversion
+
+## Increment and decrement operators
+
+# 类的动态内存管理
+
+## Some default operations
+
+## An example with dynamic memory
+
+## Solution1: Hard copy
+
+## Solution2: Soft copy
+
+## Smart pointers
+
+# 类的继承
+
+## Improve your source code
+
+## Derived class
+
+## Access control
+
+## Virtual functions
+
+## Inheritance and dynamic memory allocation
+
+## Examples in opencv
+
+# 类模板和std库
+
+## Class template
+
+## Template non-type parameters
+
+## Class template specialization
+
+## `std` classes
+
+# 错误处理
+
+## Standard output stream and standard error stream
+
+## `assert`
+
+## Exceptions
+
+## More about exceptions
+
+## `nothrow`
+
+# 嵌套类和RTTI
+
+## Friend classes
+
+## Nested types
+
+## RTTI and type cast operators
