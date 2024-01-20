@@ -14,8 +14,13 @@
     - [C风格的输入](#c风格的输入-1)
 - [数据类型和算数运算符](#数据类型和算数运算符)
   - [整数](#整数)
-  - [Different integer types](#different-integer-types)
-  - [Floating-point numbers](#floating-point-numbers)
+    - [`int`](#int)
+  - [其他整数类型](#其他整数类型)
+    - [`char`](#char)
+    - [`bool`](#bool)
+    - [`size_t`](#size_t)
+    - [固定位数整型](#固定位数整型)
+  - [浮点数](#浮点数)
   - [Constant numbers and constant variables](#constant-numbers-and-constant-variables)
   - [Arithmetic operators](#arithmetic-operators)
   - [Special notes](#special-notes)
@@ -204,6 +209,8 @@ C风格的输入使用`scanf`，这也是一个函数，例如`scanf("%d", &a);`
 
 ## 整数
 
+### `int`
+
 - `int`：最常用的整数类型。  
   ```C++
   int i;  // 声明一个整数变量
@@ -234,6 +241,78 @@ C风格的输入使用`scanf`，这也是一个函数，例如`scanf("%d", &a);`
     cout << "sizeof(long long) = " << sizeof(long long) << endl;
   ```
 
+## 其他整数类型
+
+### `char`
+
+本质上是个8位的整数，分为`signed char` $(-128\sim127)$和`unsigned char` $(0\sim255)$。至于`char`到底表示`signed char`还是`unsigned char`，标准并没有规定，在不同的平台上会有所不同。给`char`类型变量赋值时，我们既可以用字符，也可以直接用整数。同样的，对于`char`变量也可以以整数而非字符形式输出，只要在变量前加上加号`+`即可。另外，对于中文字符，我们需要采用Unicode编码，使用`char16_t`或`char32_t`。
+
+```C++
+char c1 = 'C';
+char c2 = 80;  // 'P'
+char c3 = 0x50;  // 'P'
+
+cout << +c1;  // 67
+
+char16_t c = u'码'；  // C++11
+char32_t c = U'码';  // C++11
+```
+
+### `bool`
+
+- `bool`是C++的数据类型，但不是C语言的数据类型。
+- `bool`变量占1个字节，也就是8位，而不是1位。但取值范围只有`true`(1)和`false`(0)。
+- 对于`bool`类型的变量来讲，其值只要不为0，都会被转成1。
+
+```C++
+bool b1 = true;  \\ 1
+int i = b1;  \\ 1
+bool b2 = -257;  \\ 1
+```
+
+- 在C语言中使用bool类型，主要有两种方式。一是使用`typedef`定义bool类型，二是使用C99标准引入的`stdbool.h`库。  
+  ```C
+  // use typedef to create a type
+  typedef char bool;
+  #define true 1
+  #define false 0
+
+  // use stdbool.h since C99
+  #include <stdbool.h>
+  ```
+
+### `size_t`
+
+- `size_t`也是一种整数类型，但一般用于表达内存大小或者元素的个数等场景。这是因为在进行申请内存等操作时，如果我们使用`int`来表示内存的大小，最大只能申请4Gb ($2^{32}$ bit)的内存，随着计算机的内存越来越大程序越来越复杂，`int`就不够用了。
+- `size_t`是无符号整数，能够表示当前系统理论上能够支持的最大的任何类型对象的大小，`sizeof`的返回值就是`size_t`类型。
+
+### 固定位数整型
+
+从C++11开始，C++引入了`cstdint`库，定义了一些固定位数的整数类型，避免同样的类型在不同平台上位数不同导致的问题。例如`int8_t`，`int16_t`，`int32_t`，`int64_t`，`uint8_t`，`uint16_t`，`uint32_t`，`uint64_t`等。同时还定义了一些实用的宏，可以很方便地用来判断变量的范围，避免出现溢出。例如`INT8_MIN`，`INT16_MIN`，`INT32_MIN`，`INT64_MIN`，`INT8_MAX`，`INT16_MAX`，`INT32_MAX`，`INT64_MAX`。
+
+## 浮点数
+
+- 由于实数有无穷多个，而不管什么数据类型总是只能用有限的位数来表示，因此不可能准确地表示所有实数，只能在能表达的范围内取一个最接近的采样点来近似表示，这就是浮点数。因为浮点数并不是完全准确的，所以浮点数的计算总是存在微小的误差，这种误差是无法消除的，我们能做的只是管理好这些误差使它们尽量不明显影响计算的结果。
+  ```C++
+  float f1 = 1.2f;
+  cout << fixed << setprecision(15) << f1;  // 1.200000047683716
+
+  float f3 = 2.3E+9f;  // 2602300000000.000000000000000
+  float f4 = f3 + 10;  // 2602300000000.000000000000000
+  cout << "f3-f4= : " << (f3 - f4);  // 0.000000000000000
+  ```
+- `float`：单精度浮点数，32位，具体格式如下。
+  ![float](./img/float.png)
+  `double`：双精度浮点数，64位。
+  `long double`：扩展精度浮点数，如果平台支持128位则为128位，不支持则为64位。
+  在深度学习中，由于涉及到海量的浮点运算，因此也采用一种用16位来表示的半精度浮点数，但不是C++标准。
+- 对于两个浮点数相等与否的判断，由于浮点数都是近似的，所以不能用`==`来判断，而是计算两个数的差值，只要差值小于一个规定的阈值我们就认为两者相等。
+  ```C++
+  if (fabs(f1 - f2) < FLT_EPSILON)
+  ```
+
+- `inf`：无穷大。上图float格式中的exponent=11111111，fraction=0；
+  `nan`：not a number。exponent=11111111，fraction!=0。
 
 
 
@@ -248,18 +327,6 @@ C风格的输入使用`scanf`，这也是一个函数，例如`scanf("%d", &a);`
 
 
 
-
-
-
-
-
-
-
-
-
-## Different integer types
-
-## Floating-point numbers
 
 ## Constant numbers and constant variables
 
