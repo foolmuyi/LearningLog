@@ -21,9 +21,12 @@
     - [`size_t`](#size_t)
     - [固定位数整型](#固定位数整型)
   - [浮点数](#浮点数)
-  - [Constant numbers and constant variables](#constant-numbers-and-constant-variables)
-  - [Arithmetic operators](#arithmetic-operators)
-  - [Special notes](#special-notes)
+  - [算术运算符](#算术运算符)
+    - [常量数值](#常量数值)
+    - [`const`](#const)
+    - [`auto`](#auto)
+    - [算术操作符](#算术操作符)
+    - [数据类型转换](#数据类型转换)
 - [分支与循环语句](#分支与循环语句)
   - [`if` statement](#if-statement)
   - [`? :` operator](#--operator)
@@ -314,25 +317,90 @@ bool b2 = -257;  \\ 1
 - `inf`：无穷大。上图float格式中的exponent=11111111，fraction=0；
   `nan`：not a number。exponent=11111111，fraction!=0。
 
+## 算术运算符
 
+### 常量数值
 
+- 正常写一个整数默认十进制，例如`95`；在前面加一个0表示八进制，例如`0137`表示八进制的95；前面加上0x表示十六进制，例如`0x5F`表示十六进制的95。
+- 通过在数值后面加上特定的字符，我们可以指定数值为不同的数据类型。
+  ```C++
+  95  \\ int
+  95u  \\ unsigned int
+  95l  \\ long
+  95ul  \\ unsigned long
+  95lu  \\ unsigned long
 
+  6.02e23L  \\ long double
+  6.02e23f  \\ float
+  6.02e23  \\ double
+  ```
 
+### `const`
 
+`const`是一个类型限定符，使用`const`定义的变量必须在定义时就初始化，并且其值不能被修改，通常用来定义一些常量，可以替代宏定义。
+```C++
+const float PI = 3.1415926f;
+```
 
+### `auto`
 
+`auto`是一个类型占位符（placeholder），可以让我们在定义变量时不直接指定变量的类型，而是根据变量初始化赋的值的数据类型来自动确定。
+```C++
+auto a = 2;  // int
+auto b = 2.3;  // float
+auto c;  // C允许这种写法，C++不允许
+auto d = a * 1.2;  // double
+```
+注意，变量的类型一旦确定，后续就不会再改变，如果给变量赋的值和变量的数据类型不一致，可能会存在隐式的类型转换从而造成精度丢失。
+```C++
+auto a = 2;
+a = 3.2;  // 3
+```
 
+### 算术操作符
 
+| 操作符名称 | 语法 |
+| :-: | :-: |
+| 单目加 | `+a` |
+| 单目减 | `-a` |
+| 加 | `a + b` |
+| 减 | `a - b` |
+| 乘 | `a * b` |
+| 除 | `a / b` |
+| 取余 | `a % b` |
+| 按位取反 | `~a` |
+| 按位与 | `a & b` |
+| 按位或 | `a \| b` |
+| 按位异或 | `a ^ b` |
+| 向左移位 | `a << b` |
+| 向右移位 | `a >> b` |
 
+使用除法时要注意，当除数和被除数都是整数时，执行的是整数除法，相当于Python里的地板除`//`，结果是整数（直接去掉小数部分而不是四舍五入）。当两者任意一个为浮点数时，结果为浮点数。
+```C++
+cout << 17/5 << endl;  // 3
+cout << 5/3 << endl;  // 1
+cout << 5/3.f << endl;  // 1.666666626930237
+```
 
+### 数据类型转换
 
+```C++
+int n1 = 9;  // 值与变量类型相同，无转换
+int n2 = 'C'；  // 隐式转换，char to int
+int n3 = (int)'C'；  // 显式转换，C风格
+int n4 = int('C');  // 显式转换，函数风格
+int n5 = 2.8;  // 隐式转换，double to int
+float n6 = 2.3; // 隐式转换，double to float
+short n7 = 650000;  // 溢出
+```
+![data loss](./img/data_loss.png)
 
-
-## Constant numbers and constant variables
-
-## Arithmetic operators
-
-## Special notes
+所有的算术运算只会在`int`，`long`，`float`，`double`之间进行，如果有操作数不是这四种类型，会被自动转为这四种类型。
+```C++
+unsigned char a = 255;
+unsigned char b = 1;
+int c = a + b;  // 256
+```
 
 # 分支与循环语句
 
