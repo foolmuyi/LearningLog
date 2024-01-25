@@ -28,13 +28,13 @@
     - [算术操作符](#算术操作符)
     - [数据类型转换](#数据类型转换)
 - [分支与循环语句](#分支与循环语句)
-  - [`if` statement](#if-statement)
-  - [`? :` operator](#--operator)
-  - [Conditional expressions](#conditional-expressions)
-  - [`while` loop](#while-loop)
-  - [`for` loop](#for-loop)
-  - [`goto` statement](#goto-statement)
-  - [`switch` statement](#switch-statement)
+  - [`if`语句](#if语句)
+  - [`? :`三目运算符](#-三目运算符)
+  - [条件表达式](#条件表达式)
+  - [`while`循环](#while循环)
+  - [`for`循环](#for循环)
+  - [`goto`语句](#goto语句)
+  - [`switch`语句](#switch语句)
 - [数据结构](#数据结构)
   - [Arrays](#arrays)
   - [Strings](#strings)
@@ -404,19 +404,122 @@ int c = a + b;  // 256
 
 # 分支与循环语句
 
-## `if` statement
+## `if`语句
 
-## `? :` operator
+```C++
+if (num < 5)
+  cout << "The number is less than 5." << endl;  // 只有一行时不需要用{}
+else if (num > 10)
+  cout << "The number is greater than 10." << endl;
+else
+  // 超过一行必须用{}
+  {
+    cout << "The number is greater than 5." << endl;
+    cout << "The number is less than 10." << endl;
+  }
+```
 
-## Conditional expressions
+## `? :`三目运算符
 
-## `while` loop
+`var = condition ? value1 : value2`。如果条件为`true`，`var = value1`；如果条件为`false`，`var = value2`。
 
-## `for` loop
+## 条件表达式
 
-## `goto` statement
+- 凡是可以被隐式地转换成`bool`类型的表达式都可以作为条件，包括`bool`, `char`, `int`, `float`等。
+- 关系表达式：`a == b`, `a != b`, `a < b`, `a > b`, `a <= b`, `a >= b`。
+- 逻辑表达式：`!a`, `a && b`, `a || b`。如果有操作数不是`bool`类型会被隐式转换为`bool`类型，例如`-2 && true`等价于`true && true`，结果为`true`。
 
-## `switch` statement
+## `while`循环
+
+- `while`语法
+  ```C++
+  while (condition)
+    {
+      // do something...
+    }
+  ```
+
+- `do-while`循环
+  ```C++
+  do
+  {
+    // do something
+  }
+  while (condition)
+  ```
+
+- `break`语句：跳出循环。
+- `continue`语句：跳过本次循环，继续下一次循环。
+
+## `for`循环
+
+- 语法
+  ```C++
+  for (initialization; condition; iteration)
+    {
+      // do something...
+    }
+  ```
+  初始化和迭代表达式也可以省略，例如：
+  ```C++
+  for (; num > 0; )
+    {
+      cout << "num = " << num << endl;
+      num--;
+    }
+  ```
+  甚至条件表达式也可以省略，这样就变成了死循环，相当于`while (true)`。
+  ```C++
+  for (;;)
+    {
+      // do something...
+      cout << "Endless loop!" << endl;
+    }
+  ```
+
+## `goto`语句
+
+跳转到任意的位置，会降低程序的可读性，一般不建议使用，但在错误处理等场景可能会使用。
+
+```C++
+float mysquare(float value)
+  {
+    float result = 0.0f;
+
+    if (value >= 1.0f || value <= 0)
+      {
+        cerr << "The input is out of range." << endl;
+        goto EXIT_ERROR;
+      }
+      result = value * value;
+      return result;
+
+    EXIT_ERROR:
+      // do something such as closing files here
+      return 0.0f;
+  }
+```
+
+## `switch`语句
+
+- 语法
+  ```C++
+  switch (var)
+  {
+    case value1:
+      // do something...
+    case value2:
+      // do something...
+      break;
+    case value3:
+      // do something...
+      break;
+    default:
+      // do something...
+      break;
+  }
+  ```
+  注意不要忘记写`break`，比如在上面的代码中，如果`var`的值为`value1`，会在执行完`value1`分支下的代码后继续执行`value2`分支的代码，直到遇到`break`退出。
 
 # 数据结构
 
