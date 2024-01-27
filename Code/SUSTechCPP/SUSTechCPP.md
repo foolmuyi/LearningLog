@@ -36,7 +36,13 @@
   - [`goto`语句](#goto语句)
   - [`switch`语句](#switch语句)
 - [数据结构](#数据结构)
-  - [Arrays](#arrays)
+  - [数组](#数组)
+    - [一般数组](#一般数组)
+    - [变长数组](#变长数组)
+    - [未知长度数组](#未知长度数组)
+    - [数组的读写](#数组的读写)
+    - [多维数组](#多维数组)
+    - [`const`数组](#const数组)
   - [Strings](#strings)
   - [Structures unions and enumerations](#structures-unions-and-enumerations)
   - [`typedef`](#typedef)
@@ -393,7 +399,7 @@ int n5 = 2.8;  // 隐式转换，double to int
 float n6 = 2.3; // 隐式转换，double to float
 short n7 = 650000;  // 溢出
 ```
-![data loss](./img/data_loss.png)
+![data loss](./img/data_loss.png){height=400}
 
 所有的算术运算只会在`int`，`long`，`float`，`double`之间进行，如果有操作数不是这四种类型，会被自动转为这四种类型。
 ```C++
@@ -523,7 +529,122 @@ float mysquare(float value)
 
 # 数据结构
 
-## Arrays
+## 数组
+
+### 一般数组
+
+- 在C和C++中，数组是一段连续的内存空间。
+- 数组的大小一旦确定不能再更改，也就是能存放的对象个数是固定的。
+- 数组内元素的类型可以是任何类型，比如基本的数据类型（int，float，bool等），或者结构体、类、指针、枚举类型等等。
+```C++
+int num_array1[5];  // not initialized. random values
+int num_array2[5] = {1, 2, 3, 4, 5};  // initialized
+```
+
+### 变长数组
+
+变长数组不是说数组的长度可以改变，而是指在声明一个数组时，数组的长度不是一个确定的常数，而是由一个变量指定的，在程序运行时才可以确定，编译时不能确定。
+
+```C++
+int len;
+// some code...
+int num_array[len];
+```
+值得注意的是，如果上面代码中的`len`为0甚至为负值，编译也不会报错，需要我们在写代码时多加注意。
+```C++
+len = -1 sizeof(num_array) = 18446744073709551612
+len = 0 sizeof(num_array) = 0
+```
+
+### 未知长度数组
+
+未知长度数组指的是声明数组时不直接指定数组的长度，而是由初始化列表决定。
+```C++
+int num_array[] = {1, 2, 3, 4, 5};
+```
+还有一种情况是作为函数的参数。
+```C++
+float array_sum(float values[], size_t length);
+float array_sum(float *values, size_t length);
+```
+
+### 数组的读写
+
+上文已经提到，在C和C++中，数组其实就是一段连续的内存，而作为数组名称的变量（比如前文中的`num_array`）存储的其实是这一段连续内存的首地址，相当于指针。
+因此，如果要将一个数组的内容复制给另一个数组，要么逐个元素复制，要么使用专门的内存拷贝函数，不能进行两个数组变量名的赋值。
+```C++
+int array1[4] = {9, 8, 7, 6};
+int array2[4];
+array2 = array1;  // error!
+array2[0] = array1[0];  // ok
+array2[1] = array1[1];  // ok
+array2[2] = array1[2];  // ok
+array2[3] = array1[3];  // ok
+```
+数组在内存中的存储方式如下图所示。
+![array](./img/array.png){height=600}
+需要特别注意的是，在C和C++中进行数组操作时没有边界检查，越界不会触发报错！例如在上图所示的数组中，如果我们对`array[-1]`进行赋值，则内存中`p-1, p-2, p-3, p-4`这四个字节将会被用来存我们赋的值，尽管这四个字节并不是我们一开始声明数组时申请的内存。这再一次体现了在C和C++中，数组不是一个对象，只是一段连续的内存，数组名只是这一段内存的首地址。
+
+### 多维数组
+
+- 多维数组的定义和读写和一维数组是类似的。
+  ```C++
+  int mat[2][3] = {{11, 12, 13}, {14, 15, 16}};
+
+  for (int r = 0; r < rows; r++)
+  {
+    for (int c = 0; c < cols; c++>)
+      cout << mat[r][c] << ", ";
+    cout << endl;
+  }
+  ```
+- 二维数组作为函数的参数时，行数可以不指明，类似一维数组中的未知长度数组，但列数必须指明，这是由二维或多维数组在内存中的存储方式决定的。
+  ```C++
+  void init_2d_array (float mat[][], size_t rows, size_t cols);  // error!
+  void init_2d_array (float mat[][3], size_t rows, size_t cols);  // ok
+  ```
+  由于内存地址是一维的，因此二维数组在内存中的存储方式如下图所示，简单地说就是存完一行再存下一行。
+  ![2d_array](./img/2d_array.png){height=600}
+
+### `const`数组
+
+- 前文我们已经知道，可以使用`const`来定义不希望在程序运行中被改变的量。对于数组也是如此，可以用`const`来定义常量数组，这样定义的数组在程序中不能被修改。
+  ```C++
+  const float values[4] = {1.1f, 1.2f, 1.3f, 1.4f};
+  ```
+- `const`数组另一主要用途是用在函数参数中，因为在很多函数中，我们只需要从输入参数中读取数据，为了避免误操作修改了输入参数的数据，可以使用`const`。
+  ```C++
+  float array_sum(const float values[], sizt_t length)
+  {
+    float sum = 0.0f;
+    for (int idx = 0; idx < length; idx++)
+    {
+      sum += values[idx];
+      // values[idx] = 0;  // error!
+    }
+    return sum;
+  }
+  ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Strings
 
