@@ -43,7 +43,9 @@
     - [数组的读写](#数组的读写)
     - [多维数组](#多维数组)
     - [`const`数组](#const数组)
-  - [Strings](#strings)
+  - [字符串](#字符串)
+    - [数组风格的字符串](#数组风格的字符串)
+    - [`string`类](#string类)
   - [Structures unions and enumerations](#structures-unions-and-enumerations)
   - [`typedef`](#typedef)
 - [内存和指针](#内存和指针)
@@ -626,6 +628,56 @@ array2[3] = array1[3];  // ok
   }
   ```
 
+## 字符串
+
+### 数组风格的字符串
+
+- 数组风格的字符串就是把字符逐个存在一个数组里，但需要注意的是，在字符串的最后需要加一个`\0`来作为字符串结束的标志。
+  ```C++
+  char rabbit[16] = {'P', 'e', 't', 'e', 'r'};
+  // ok. 只初始化了部分元素，未被初始化的部分会被自动初始化为0
+  char bad_pig[9] = ['P', 'e', 'p', 'p', 'a', ' ', 'P', 'i', 'g'];
+  // bad. 没有\0作为结尾，使用一些字符串相关函数对其进行操作时会越界（直到\0）
+  char good_pig[10] = ['P', 'e', 'p', 'p', 'a', ' ', 'P', 'i', 'g', '\0'];
+  // ok.
+  ```
+- `size_t strlen(const char *str)`函数用来获取字符串的长度，其原理是从数组第一个元素往后找到第一个`\0`为止。
+  ```C++
+  char name[10] = {'Y', 'u', '\0', 'S', '.', '0'};
+  cout << strlen(name) << endl;  // 2
+  ```
+- 常量字符串：为了更方便地声明数组风格的字符串，我们可以采用下面这种方式，字符串会被自动分解为单个的字符存到数组里，并且自动在最后加上`\0`。
+  ```C++
+  char name1[] = "Southern University of Science and Technology";
+  ```
+- 字符串操作
+  - `char* strcpy(char* dest, const char* src);`：将`src`字符串的内容全部拷贝到`dest`，如果目标字符串比源字符串短会造成溢出。
+  - `char *strncpy(char *dest, const char *src, size_t count);`：同样是字符串拷贝，但是加了一个参数`count`，表示最多拷贝`count`个字符。
+  - `char *strcat(char *dest, const char *src);`：将`src`字符串的内容添加到`dest`后面，同样可能因为长度不够存在越界问题，相应地也有`strncat`函数。
+  - `int strcmp(const char *lhs, const char *rhs);`：比较两个字符串的顺序，`lhs`靠前返回正值，`rhs`靠前返回负值，如果首字符相同则比较第二个字符，以此类推。
+
+### `string`类
+
+数组风格的字符串操作起来非常繁琐且容易出错，而使用`string`类则会安全和简便很多。
+
+- 声明字符串，相当于实例化一个对象。
+  ```C++
+  std::string str1 = "Hello";
+  std::string str2 = "SUSTech";
+  ```
+- 字符串拼接，可以直接使用加号`+`。
+  ```C++
+  std::string result = str1 + ", " + str2;  // "Hello, SUSTech"
+  ```
+- 获取字符串长度可以用`.length()`方法。
+  ```C++
+  cout << result.length() << endl;  // 14
+  ```
+- 比较两个字符串的顺序可以直接用大于`>`小于`<`符号。
+  ```C++
+  cout << (str1 < str2) << endl;  // 1(true)
+  ```
+不过需要注意的是，`string`类仍然不会进行边界检查，这意味着还是可能存在越界。比如对上面代码中的`str1`，如果我们写`cout << str1[66] << endl;`，明显超过了`str1`的范围，但不会触发任何报错，可以正常运行，只是结果不确定。
 
 
 
@@ -635,18 +687,6 @@ array2[3] = array1[3];  // ok
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-## Strings
 
 ## Structures unions and enumerations
 
