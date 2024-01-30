@@ -46,7 +46,10 @@
   - [字符串](#字符串)
     - [数组风格的字符串](#数组风格的字符串)
     - [`string`类](#string类)
-  - [Structures unions and enumerations](#structures-unions-and-enumerations)
+  - [结构体、联合体和枚举类型](#结构体联合体和枚举类型)
+    - [结构体`struct`](#结构体struct)
+    - [联合体`union`](#联合体union)
+    - [枚举类型`enum`](#枚举类型enum)
   - [`typedef`](#typedef)
 - [内存和指针](#内存和指针)
   - [Pointers](#pointers)
@@ -679,18 +682,117 @@ array2[3] = array1[3];  // ok
   ```
 不过需要注意的是，`string`类仍然不会进行边界检查，这意味着还是可能存在越界。比如对上面代码中的`str1`，如果我们写`cout << str1[66] << endl;`，明显超过了`str1`的范围，但不会触发任何报错，可以正常运行，只是结果不确定。
 
+## 结构体、联合体和枚举类型
 
+### 结构体`struct`
 
+- 结构体是一种包含若干个由我们定义的成员的数据类型，有点类似于类。
+  ```C++
+  // 定义结构体
+  struct Student{
+    char name;
+    int born;
+    bool male;
+  };
 
+  // 访问元素和赋值
+  struct Student stu;
+  strcpy(stu.name, "Yu");
+  stu.born = 2000;
+  stu.male = true;
 
+  // 初始化
+  struct Student stu = {"Yu", 2000, true};
 
+  // 批量创建
+  struct Student students[100];  // 数组students内包含100个Student结构体
+  ```
+- 在C++中，如果我们已经定义了结构体，后续在创建具体的结构体对象时可以不再写关键字`struct`；而在C语言中创建具体的结构体对象时仍然需要写关键字`struct`，除非使用`typedef`定义结构体。
+  ```C++
+  Student stu;  // C++
+  struct Student stu;  // C
 
+  // C with typedef
+  typedef _Student{
+    char name[4];
+    int born;
+    bool male;
+  } Student;
+  Student stu;
+  ```
+- 结构体对齐与填充
+  ```C++
+  struct Student1{
+    int id;
+    bool male;
+    char lable;
+    float weight;
+  };
 
+  struct Student2{
+    int id;
+    bool male;
+    float weight;
+    char label;
+  };
 
+  Student1 stu1;
+  Student2 stu2;
+  cout << sizeof(stu1) << endl;  // 12
+  cout << sizeof(stu2) << endl;  // 16
+  ```
+  上面代码中的两个结构体，成员完全相同，只是顺序不同，所占的内存空间就不同，这是由结构体在内存中的存储方式决定的。处理器从内存中读取数据时，往往一次读取4个字节，因此如果某个数据横跨在两个4字节之间，比如前面两个字节后面两个字节，就需要读取两次才能完整读取，为了提高读取效率，结构体在存储时会空出一些字节按4个字节一组的方式来存数据。对于上面的两个结构体，在内存中的存储方式如下图所示。
+  ![struct padding](./img/struct.png){width=500}
 
-## Structures unions and enumerations
+### 联合体`union`
+
+`union`的定义和结构体类似。
+```C++
+union ipv4address{
+  uint32_t address32;
+  uint8_t address8[4];
+};
+
+ipv4address addr;
+cout << sizeof(addr) << endl;  // 4
+```
+但是和结构体非常不同的是，`union`的所有成员共享同一块内存，大小由占内存最大的成员决定，所有成员都指向这块内存的首地址，本质上是同一块数据的不同别名。例如在上面的例子中，`address32`相当于将一个IPv4地址作为一个整体，`address8[4]`相当于将4位分别存储。
+
+### 枚举类型`enum`
+
+- 枚举类型相当于把一堆`const`类型放到一个数组里。
+  ```C++
+  enum color {WHITE, BLACK, RED, GREEN, BLUE, YELLOW, NUM_COLORS};
+  ```
+- 枚举类型的成员实际上是整数，但是不能用来进行算术运算。
+  ```C++
+  color pen_color = RED;  // init (way 1)
+  color pen_color = color(2);  // init (way 2)
+
+  cout << pen_color << endl;  // 2
+  pen_color += 1;  // error
+  ```
 
 ## `typedef`
+
+- `typedef`用于为一种数据类型创建别名。
+  ```C++
+  typedef int myint;
+  typedef unsigned char vec3b[3];
+
+  int num = 32;
+  myint num = 32;  // 等价
+
+  unsigned char color[3] = {144, 169, 255};
+  vec3b color = {144, 169, 255};
+  ```
+
+
+
+
+
+
+
 
 # 内存和指针
 
