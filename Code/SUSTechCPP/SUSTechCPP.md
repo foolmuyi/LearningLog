@@ -784,15 +784,21 @@ cout << sizeof(addr) << endl;  // 4
   myint num = 32;  // 等价
 
   unsigned char color[3] = {144, 169, 255};
-  vec3b color = {144, 169, 255};
+  vec3b color = {144, 169, 255};  // 等价
   ```
+- `typedef`还经常和宏结合起来使用，以统一不同数据类型的位宽。
+  ```C++
+  #ifndef _UINT8_T
+  #define _UINT8_T
+  typedef unsigned char uint8_t;
+  #endif
 
-
-
-
-
-
-
+  #if defined(_LP64)
+  typedef int wchar_t;
+  #else
+  typedef long wchar_t;
+  #endif
+  ```
 
 # 内存和指针
 
