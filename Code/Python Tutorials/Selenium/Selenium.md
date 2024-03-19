@@ -16,7 +16,13 @@
   - [CLASS\_NAME](#class_name)
   - [CSS\_SELECTOR](#css_selector)
 - [等待](#等待)
+  - [显式等待](#显式等待)
+    - [等待条件](#等待条件)
+    - [自定义等待条件](#自定义等待条件)
+  - [隐式等待](#隐式等待)
 - [页面对象](#页面对象)
+  - [测试用例](#测试用例)
+  - [页面对象类](#页面对象类)
 - [WebDriver API](#webdriver-api)
 - [FAQ](#faq)
 
@@ -252,6 +258,257 @@ content = driver.find_element(By.CSS_SELECTOR, 'p.content')
 ```
 
 # 等待
+
+现在越来越多的网站使用了AJAX技术，这使得WebDriver不能很准确地判断网页是否加载完毕，因此Selenium提供显式等待和隐式等待两种方式来进行辅助。
+
+## 显式等待
+
+显示等待就是我们指定一个条件，等待条件满足后再继续执行后面的程序，最简单的显示等待方式无疑就是`time.sleep()`。在网页操作中，为了尽可能提高效率，我们可以使用`WebDriverWait`和`expected_conditions`来表达我们的等待条件并等待其满足，比如最常见的等网页加载可以转化为等待某一个元素出现，下面是一个例子：
+
+```Python
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+
+driver = webdriver.Firefox()
+driver.get("http://somedomain/url_that_delays_loading")
+try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "myDynamicElement"))
+    )
+except TimeoutException:
+    print('Timeout...')
+finally:
+    driver.quit()
+```
+
+在上面的例子中，`WebDriverWait`会等待ID为`myDynamicElement`的元素出现（默认每500毫秒查找一次）然后再继续，最多等待10秒，如果超过10秒还是没有找到则报`TimeoutException`异常。
+
+### 等待条件
+
+这里的等待条件即`expected_conditions`，Selenium已经预定义了很多常用的条件，我们只要`from selenium.webdriver.support import expected_conditions`然后直接使用即可，详细的使用文档见[Expected conditions Support](https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_conditions)。
+
+- `title_is`
+- `title_contains`
+- `presence_of_element_located`
+- `visibility_of_element_located`
+- `visibility_of`
+- `presence_of_all_elements_located`
+- `text_to_be_present_in_element`
+- `text_to_be_present_in_element_value`
+- `frame_to_be_available_and_switch_to_it`
+- `invisibility_of_element_located`
+- `element_to_be_clickable`
+- `staleness_of`
+- `element_to_be_selected`
+- `element_located_to_be_selected`
+- `element_selection_state_to_be`
+- `element_located_selection_state_to_be`
+- `alert_is_present`
+
+### 自定义等待条件
+
+如果上面Selenium预定义的等待条件还不够用，也可以自定义等待条件，基本格式是一个包含`__call__`方法（在条件不满足时返回`False`）的类，下面是一个例子：
+
+```Python
+class element_has_css_class(object):
+  """An expectation for checking that an element has a particular css class.
+
+  locator - used to find the element
+  returns the WebElement once it has the particular css class
+  """
+  def __init__(self, locator, css_class):
+    self.locator = locator
+    self.css_class = css_class
+
+  def __call__(self, driver):
+    element = driver.find_element(*self.locator)   # Finding the referenced element
+    if self.css_class in element.get_attribute("class"):
+        return element
+    else:
+        return False
+
+# Wait until an element with id='myNewInput' has class 'myCSSClass'
+wait = WebDriverWait(driver, 10)
+element = wait.until(element_has_css_class((By.ID, 'myNewInput'), "myCSSClass"))
+```
+
+## 隐式等待
+
+所谓隐式等待其实就是设置一个超时时间，WebDriver会在这个时间内不停去查找指定元素，若超时还未找到就抛出异常。这个超时时间是对WebDriver实例设置的，在该实例的整个生命周期内有效，下面是一个例子：
+
+```Python
+from selenium import webdriver
+
+driver = webdriver.Firefox()
+driver.implicitly_wait(10) # seconds
+driver.get("http://somedomain/url_that_delays_loading")
+myDynamicElement = driver.find_element_by_id("myDynamicElement")
+```
+
 # 页面对象
+
+本章是针对页面对象设计模式的一个简单介绍。
+页面对象设计模式的好处：
+- 测试用例的可读性好；
+- 代码复用性好，可在多个测试用例中使用；
+- 减少重复的代码；
+- 如果用户界面发生改动，只需修改很少的代码。
+
+## 测试用例
+
+下面的代码是在python.org上查找一个词的测试用例。
+
+```Python
+import unittest
+from selenium import webdriver
+import page
+
+class PythonOrgSearch(unittest.TestCase):
+    """A sample test class to show how page object works"""
+
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.driver.get("http://www.python.org")
+
+    def test_search_in_python_org(self):
+        """Tests python.org search feature. Searches for the word "pycon" then
+        verified that some results show up.  Note that it does not look for
+        any particular text in search results page. This test verifies that
+        the results were not empty."""
+
+        #Load the main page. In this case the home page of Python.org.
+        main_page = page.MainPage(self.driver)
+        #Checks if the word "Python" is in title
+        self.assertTrue(main_page.is_title_matches(), "python.org title doesn't match.")
+        #Sets the text of search textbox to "pycon"
+        main_page.search_text_element = "pycon"
+        main_page.click_go_button()
+        search_results_page = page.SearchResultsPage(self.driver)
+        #Verifies that the results page is not empty
+        self.assertTrue(search_results_page.is_results_found(), "No results found.")
+
+    def tearDown(self):
+        self.driver.close()
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+## 页面对象类
+
+页面对象模式为每个网页创建一个对象，从而将测试代码和具体的网页操作代码分开。比如在上面的例子中我们用到的`page`模块大概长这样：
+
+```Python
+from element import BasePageElement
+from locators import MainPageLocators
+
+class SearchTextElement(BasePageElement):
+    """This class gets the search text from the specified locator"""
+
+    #The locator for search box where search string is entered
+    locator = 'q'
+
+
+class BasePage(object):
+    """Base class to initialize the base page that will be called from all
+    pages"""
+
+    def __init__(self, driver):
+        self.driver = driver
+
+
+class MainPage(BasePage):
+    """Home page action methods come here. I.e. Python.org"""
+
+    #Declares a variable that will contain the retrieved text
+    search_text_element = SearchTextElement()
+
+    def is_title_matches(self):
+        """Verifies that the hardcoded text "Python" appears in page title"""
+
+        return "Python" in self.driver.title
+
+    def click_go_button(self):
+        """Triggers the search"""
+
+        element = self.driver.find_element(*MainPageLocators.GO_BUTTON)
+        element.click()
+
+
+class SearchResultsPage(BasePage):
+    """Search results page action methods come here"""
+
+    def is_results_found(self):
+        # Probably should search for this text in the specific page
+        # element, but as for now it works fine
+        return "No results found." not in self.driver.page_source
+```
+
+同理，上面代码中的`element`模块大概长这样：
+
+```Python
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+
+
+class BasePageElement(object):
+    """Base page class that is initialized on every page object class."""
+
+    def __set__(self, obj, value):
+        """Sets the text to the value supplied"""
+
+        driver = obj.driver
+        WebDriverWait(driver, 100).until(
+            lambda driver: driver.find_element(By.NAME, self.locator))
+        driver.find_element(By.NAME, self.locator).clear()
+        driver.find_element(By.NAME, self.locator).send_keys(value)
+
+    def __get__(self, obj, owner):
+        """Gets the text of the specified object"""
+
+        driver = obj.driver
+        WebDriverWait(driver, 100).until(
+            lambda driver: driver.find_element(By.NAME, self.locator))
+        element = driver.find_element(By.NAME, self.locator)
+        return element.get_attribute("value")
+```
+
+`locators`模块长这样：
+
+```Python
+from selenium.webdriver.common.by import By
+
+class MainPageLocators(object):
+    """A class for main page locators. All main page locators should come here"""
+
+    GO_BUTTON = (By.ID, 'submit')
+
+class SearchResultsPageLocators(object):
+    """A class for search results locators. All search results locators should
+    come here"""
+
+    pass
+```
+
 # WebDriver API
+
+Selenium WebDriver提供了非常丰富的API，在此不可能一一介绍，详细信息请参考[官方API文档](https://www.selenium.dev/selenium/docs/api/py/api.html)。
+
 # FAQ
+
+- 如何下载安装WebDriver？
+  从[安装WebDriver](#安装webdriver)中给出的链接下载WebDriver文件后，解压得到可执行文件，然后将可执行文件放到`PATH`路径下，或者在实例化WebDriver时指明可执行文件的路径，例如：`driver = webdriver.Chrome(executable_path="/path/to/chromedriver")`
+
+- 如何滚动到页面的底部？
+  调用`execute_script`方法执行javascript：
+  `driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")`
+
+- 如何上传文件？
+  找到`<input type="file">`元素并调用`send_keys()`方法发送文件路径，绝对路径和相对路径都可以，但是请注意Windows系统和Unix系统路径的区别。
+
+- 如何截屏当前页面？
+  使用`save_screenshot()`方法：
+  `driver.save_screenshot('screenshot.png')`
