@@ -25,6 +25,7 @@
   - [页面对象类](#页面对象类)
 - [WebDriver API](#webdriver-api)
 - [FAQ](#faq)
+- [实用小技巧](#实用小技巧)
 
 
 ***本文为学习Selenium-Python文档过程中的随手记，完整文档见[Selenium With Python](https://selenium-python.readthedocs.io/index.html)***
@@ -512,3 +513,35 @@ Selenium WebDriver提供了非常丰富的API，在此不可能一一介绍，�
 - 如何截屏当前页面？
   使用`save_screenshot()`方法：
   `driver.save_screenshot('screenshot.png')`
+
+# 实用小技巧
+
+- 根据显示的文本快速定位元素
+  对于按钮这样的元素，可以考虑根据按钮上的文字来定位，好处是代码简单清晰明了，坏处是不能兼容多语言，方法如下：
+  ```html
+  <button class="mm-box mm-text mm-button-base mm-button-base--size-md
+  mm-button-base--block mm-button-primary mm-text--body-md-medium
+  mm-box--padding-0 mm-box--padding-right-4 mm-box--padding-left-4
+  mm-box--display-inline-flex mm-box--justify-content-center
+  mm-box--align-items-center mm-box--color-primary-inverse
+  mm-box--background-color-primary-default mm-box--rounded-pill"
+  type="submit">创建</button>
+  ```
+  对于上面这段html，可以用`driver.find_element(By.XPATH, '//button[normalize-space()="创建"]')`来定位元素。实际上不局限于`button`类型，其他类型也可以，例如`driver.find_element(By.XPATH, '//p[normalize-space()="发送"]')`。
+
+- `class`属性值包含空格导致不能用`By.CLASS_NAME`定位
+  改用`By.CSS_SELECTOR`，把空格替换成`.`即可。
+
+- 想用一些非常规的属性来定位怎么办
+  类似于上面用文本定位按钮的方式，只不过把`[]`里换成`[@var_name="value"]`的格式即可，例如：
+  ```html
+  <button class="mm-box mm-button-icon mm-button-icon--size-sm
+  mm-box--display-inline-flex mm-box--justify-content-center
+  mm-box--align-items-center mm-box--color-icon-default
+  mm-box--background-color-transparent mm-box--rounded-lg" aria-label=
+  账户选项" data-testid="account-options-menu-button"><span
+  class="mm-box mm-icon mm-icon--size-sm mm-box--display-inline-block
+  mm-box--color-inherit" style="mask-image: url(&quot;./images/icons
+  more-vertical.svg&quot;);"></span></button>
+  ```
+  对于上面这段html，如果为了代码看起来简介明了想用`aria-label`属性来定位`button`，可以写成`driver.find_element(By.XPATH, '//button[@aria-label="账户选项"]')`。
